@@ -1,7 +1,7 @@
 import React, { PropsWithChildren } from "react";
 import SiteHeader from "@/components/site-header";
-import { siteConfig } from "@/config/site";
-import Link from "next/link";
+
+
 
 import SiteFooter from "@/components/site-footer";
 

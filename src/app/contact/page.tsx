@@ -1,6 +1,6 @@
 import React from "react";
 import PageHeader from "@/components/page-header";
-import { siteConfig } from "@/config/site";
+
 import { Mail, Phone } from "lucide-react";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";

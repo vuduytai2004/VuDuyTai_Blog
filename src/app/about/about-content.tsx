@@ -105,7 +105,7 @@ export default function AboutContent() {
                             width={120}
                             height={120}
                             alt={siteConfig.name}
-                            className="h-[120px] w-[120px] rounded-full border-4 border-background bg-primary object-cover shadow-sm"
+                            className="size-[120px] rounded-full border-4 border-background bg-primary object-cover shadow-sm"
                         />
                         <h3 className="mt-4 text-xl font-bold text-black">{siteConfig.author}</h3>
                         <p className="text-center text-sm font-medium text-black/80">
@@ -180,7 +180,7 @@ export default function AboutContent() {
                                 <span className="absolute -left-[29px] top-1 h-3 w-3 rounded-full border-2 border-foreground bg-background" />
                                 <h3 className="text-xl font-bold">{item.role}</h3>
                                 <p className="text-sm font-semibold text-primary">
-                                    @ {item.company} // {item.period}
+                                    @ {item.company} {'//'} {item.period}
                                 </p>
                                 <p className="mt-2 text-muted-foreground">{item.description}</p>
                             </div>

@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { X, ExternalLink, FileText, ChevronLeft, ChevronRight } from "lucide-react";
-import { cn } from "@/lib/utils";
+
 
 interface Certificate {
     title: string;

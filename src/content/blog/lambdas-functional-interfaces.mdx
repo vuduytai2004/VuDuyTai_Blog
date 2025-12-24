@@ -47,7 +47,7 @@ Calculator add = (a, b) -> a + b;
 
 Java provides a `java.util.function` package with ready-to-use interfaces. You rarely need to create your own.
 
-### 1. Predicate<T>
+### 1. Predicate\<T\>
 Takes an argument and returns a `boolean`.
 *   Abstract method: `boolean test(T t)`
 *   Use case: Filtering.
@@ -57,7 +57,7 @@ Predicate<String> isLong = s -> s.length() > 10;
 boolean result = isLong.test("Hello World"); // true
 ```
 
-### 2. Consumer<T>
+### 2. Consumer\<T\>
 Takes an argument and returns nothing (`void`).
 *   Abstract method: `void accept(T t)`
 *   Use case: Printing, saving to DB.
@@ -67,7 +67,7 @@ Consumer<String> printer = s -> System.out.println(s);
 printer.accept("Java is fun");
 ```
 
-### 3. Function<T, R>
+### 3. Function\<T, R\>
 Takes an argument of type T and returns a result of type R.
 *   Abstract method: `R apply(T t)`
 *   Use case: Transformation / Mapping.
@@ -77,7 +77,7 @@ Function<String, Integer> lengthMapper = String::length;
 int len = lengthMapper.apply("Code"); // 4
 ```
 
-### 4. Supplier<T>
+### 4. Supplier\<T\>
 Takes no arguments and returns a result.
 *   Abstract method: `T get()`
 *   Use case: Lazy generation, factories.

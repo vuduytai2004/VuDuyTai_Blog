@@ -1,8 +1,8 @@
 "use client";
 
 import { buttonVariants } from "@/components/ui/button";
-import { siteConfig } from "@/config/site";
-import { SOCIALS } from "@/constants";
+
+
 import { cn, formatDate } from "@/lib/utils";
 import Link from "next/link";
 import { blogs as allBlogs } from "#site/content";
