@@ -84,7 +84,7 @@ export default async function BlogPageItem({ params }: BlogPageItemProps) {
               alt={blog.author}
               width={42}
               height={42}
-              className="rounded-full bg-white"
+              className="rounded-full bg-white object-cover aspect-square h-[42px] w-[42px]"
             />
             <div className="flex-1 text-left leading-tight">
               <p className="font-medium">{blog.author}</p>

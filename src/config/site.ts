@@ -1,14 +1,14 @@
-import authorAvatar from "../../public/images/author/devbertskie.png";
+import authorAvatar from "../../public/images/author/vuduytai.png";
 export const siteConfig = {
-  name: "Vũ Duy Tài",
+  name: "VU DUY TAI",
   description:
-    "Vũ Duy Tài's personal blog.",
-  author: "Vũ Duy Tài",
+    "VU DUY TAI's personal blog.",
+  author: "VU DUY TAI",
   authorImage: authorAvatar,
   social: {
-    github: "https://github.com/devbertskie",
-    twitter: "https://twitter.com",
-    facebook: "https://facebook.com",
+    github: "https://github.com/vuduytai2004/VuDuyTai_Blog",
+    instagram: "https://www.instagram.com/_vuduytai/",
+    facebook: "https://www.facebook.com/duytai0402",
   },
 };
 

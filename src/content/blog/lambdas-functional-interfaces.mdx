@@ -1,0 +1,98 @@
+---
+title: "Leveraging Lambdas and Functional Interfaces in Java"
+description: "A comprehensive tutorial on functional programming in Java. Using Predicate, Consumer, Function, and Supplier interfaces effectively."
+image: "/images/blog/how-to-type-env.webp"
+date: "2025-12-23"
+author: "Tai Vu"
+---
+
+
+# Leveraging Lambdas and Functional Interfaces in Java
+
+Before Java 8, Java was purely object-oriented. If you wanted to pass functionality, you had to wrap it in a class or an anonymous inner class. Java 8 changed the game by introducing Lambda expressions and Functional Interfaces, bringing functional programming concepts to the JDK.
+
+## What is a Functional Interface?
+
+A Functional Interface is an interface that contains exactly **one abstract method**. It can have multiple default or static methods, but only one abstract one.
+
+The `@FunctionalInterface` annotation ensures this rule is enforced by the compiler.
+
+```java
+@FunctionalInterface
+public interface Calculator {
+    int calculate(int a, int b);
+}
+```
+
+## Lambda Expressions
+
+Lambdas provide a clear and concise way to represent one method interface using an expression.
+
+**Before Java 8 (Anonymous Class):**
+```java
+Calculator add = new Calculator() {
+    @Override
+    public int calculate(int a, int b) {
+        return a + b;
+    }
+};
+```
+
+**Java 8 (Lambda):**
+```java
+Calculator add = (a, b) -> a + b;
+```
+
+## Built-in Functional Interfaces
+
+Java provides a `java.util.function` package with ready-to-use interfaces. You rarely need to create your own.
+
+### 1. Predicate<T>
+Takes an argument and returns a `boolean`.
+*   Abstract method: `boolean test(T t)`
+*   Use case: Filtering.
+
+```java
+Predicate<String> isLong = s -> s.length() > 10;
+boolean result = isLong.test("Hello World"); // true
+```
+
+### 2. Consumer<T>
+Takes an argument and returns nothing (`void`).
+*   Abstract method: `void accept(T t)`
+*   Use case: Printing, saving to DB.
+
+```java
+Consumer<String> printer = s -> System.out.println(s);
+printer.accept("Java is fun");
+```
+
+### 3. Function<T, R>
+Takes an argument of type T and returns a result of type R.
+*   Abstract method: `R apply(T t)`
+*   Use case: Transformation / Mapping.
+
+```java
+Function<String, Integer> lengthMapper = String::length;
+int len = lengthMapper.apply("Code"); // 4
+```
+
+### 4. Supplier<T>
+Takes no arguments and returns a result.
+*   Abstract method: `T get()`
+*   Use case: Lazy generation, factories.
+
+```java
+Supplier<Double> randomizer = Math::random;
+```
+
+## Method References
+
+If your lambda just calls an existing method, you can use method references `::` for cleaner code.
+*   `s -> System.out.println(s)` becomes `System.out::println`
+*   `s -> s.toUpperCase()` becomes `String::toUpperCase`
+
+## Conclusion
+
+Lambdas and Functional interfaces reduce boilerplate code and make your intentions clearer. They are the backbone of the Streams API and Async programming `CompletableFuture`. Embracing them is key to writing modern, clean Java code.
+

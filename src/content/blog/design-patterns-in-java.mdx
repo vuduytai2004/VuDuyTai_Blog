@@ -1,0 +1,96 @@
+---
+title: "Essential Design Patterns for Java Developers"
+description: "Don't reinvent the wheel. Learn how to implement classic GoF design patterns like Singleton, Factory, Builder, and Observer in Java."
+image: "/images/blog/extends.webp"
+date: "2025-12-24"
+author: "Tai Vu"
+---
+
+
+# Essential Design Patterns for Java Developers
+
+Design patterns are proven solutions to common software design problems. They provide a shared vocabulary for developers and help create flexible, reusable, and maintainable code. Here we explore some of the most widely used patterns in Java.
+
+## Creational Patterns
+
+### 1. Singleton
+Ensures a class has only one instance and provides a global point of access to it.
+
+```java
+public class DatabaseConnection {
+    private static DatabaseConnection instance;
+
+    private DatabaseConnection() {} // Private constructor
+
+    public static synchronized DatabaseConnection getInstance() {
+        if (instance == null) {
+            instance = new DatabaseConnection();
+        }
+        return instance;
+    }
+}
+```
+*Use case: Logging, Driver objects, Caching.*
+
+### 2. Builder Pattern
+Separates the construction of a complex object from its representation. It allows you to create immutable objects with a fluent API.
+
+```java
+User user = new User.Builder()
+    .firstName("Tai")
+    .lastName("Vu")
+    .age(22)
+    .build();
+```
+*Use case: Classes with many constructor parameters, mostly optional.*
+
+### 3. Factory Method
+Defines an interface for creating an object, but let subclasses decide which class to instantiate.
+
+## Behavioral Patterns
+
+### 1. Observer Pattern
+Defines a one-to-many dependency between objects so that when one object changes state, all its dependents are notified automatically.
+
+*Use case: Event listeners, UI updates, Social media feeds.*
+
+```java
+interface Observer { void update(String msg); }
+
+class Channel {
+    private List<Observer> subs = new ArrayList<>();
+    public void subscribe(Observer sub) { subs.add(sub); }
+    public void notify(String msg) { 
+        for(Observer s : subs) s.update(msg); 
+    }
+}
+```
+
+### 2. Strategy Pattern
+Defines a family of algorithms, encapsulates each one, and makes them interchangeable.
+
+```java
+interface PaymentStrategy { void pay(int amount); }
+
+class CreditCardStrategy implements PaymentStrategy { ... }
+class PayPalStrategy implements PaymentStrategy { ... }
+
+// Usage
+cart.pay(new PayPalStrategy());
+```
+*Use case: Payment methods, sorting algorithms, compression strategies.*
+
+## Structural Patterns
+
+### 1. Adapter Pattern
+Allows objects with incompatible interfaces to collaborate. It acts as a wrapper.
+*Use case: Integrating new libraries with legacy code.*
+
+### 2. Decorator Pattern
+Attaches new responsibilities to an object dynamically.
+*Use case: Java I/O streams (`new BufferedReader(new FileReader(...))`).*
+
+## Conclusion
+
+Design patterns are not rules, but guidelines. Overusing them can lead to unnecessary complexity. However, knowing *when* to apply them separates a junior developer from a senior architect.
+

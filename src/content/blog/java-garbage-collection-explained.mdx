@@ -1,0 +1,72 @@
+---
+title: "Deep Dive into Java Garbage Collection"
+description: "Understand the internal mechanics of Java's Garbage Collection, different GC algorithms (G1, ZGC, Shenandoah), and how to tune the JVM for performance."
+image: "/images/blog/derive-decouple.webp"
+date: "2025-12-24"
+author: "Tai Vu"
+---
+
+
+# Deep Dive into Java Garbage Collection
+
+Automatic Garbage Collection (GC) is arguably one of Java's most significant features, relieving developers from the burden of manual memory management. However, for high-performance applications, treating the GC as a "black box" is often insufficient. This article explores how Java manages memory and how modern garbage collectors work.
+
+## The Java Memory Structure
+
+To understand GC, we must first understand the memory layout of the JVM:
+
+1.  **The Stack**: Stores local variables and method call frames. References to objects live here, but the objects themselves live in the Heap.
+2.  **The Heap**: The runtime data area from which memory for all class instances and arrays is allocated. This is the playground for the Garbage Collector.
+3.  **Metaspace**: Stores class metadata (formerly PermGen).
+
+## The Generational Hypothesis
+
+Most Garbage Collectors in Java follow the **Weak Generational Hypothesis**, which states:
+*   Most objects die young.
+*   Few references exist from older to younger objects.
+
+Based on this, the Heap is divided into:
+*   **Young Generation (Eden + Survivor Spaces)**: Where new objects are born. Minor GCs happen here frequently and are very fast.
+*   **Old Generation (Tenured)**: Where long-lived objects are promoted. Major GCs happen here and are generally slower (often causing "Stop-The-World" pauses).
+
+## How GC Works: Mark and Sweep
+
+The classic algorithm involves two phases:
+1.  **Mark**: The GC traverses all object references starting from "GC Roots" (stack variables, static variables, etc.) and marks every reachable object as "live".
+2.  **Sweep**: The GC reclaims the memory occupied by all objects that were *not* marked.
+
+## Modern Garbage Collectors
+
+Java has evolved with several GC implementations to suit different needs:
+
+### 1. Serial GC
+Single-threaded. Good for small applications or single-processor machines. Stop-the-world (STW) pauses can be long.
+
+### 2. Parallel GC (Throughput Collector)
+Uses multiple threads for minor and major collections. Focuses on maximizing *throughput* (total work done) rather than minimizing pause times. This was the default for a long time.
+
+### 3. G1 GC (Garbage First)
+The default since Java 9. It partitions the heap into equal-sized regions. It prioritizes collecting regions with the most garbage (hence "Garbage First"). It aims for predictable pause times while maintaining high throughput.
+
+### 4. ZGC and Shenandoah (Low Latency GCs)
+Introduced in newer Java versions (ZGC is production-ready in JDK 15+). These collectors perform expensive work *concurrently* with the application threads. They aim for sub-millisecond pause times, regardless of heap size (even multi-terabyte heaps!).
+
+## Tuning the JVM
+
+While modern defaults are great, sometimes you need to tune. Common flags include:
+
+*   `-Xms` and `-Xmx`: Set initial and maximum heap size. Setting them equal removes the overhead of resizing the heap.
+*   `-XX:+UseG1GC`: Explicitly enable G1 GC.
+*   `-XX:MaxGCPauseMillis`: A target for maximum pause time (soft goal for G1).
+
+## Diagnosing GC Issues
+
+If your application suffers from long pauses or `OutOfMemoryError`, you need data.
+*   **GC Logs**: Enable with `-Xlog:gc*`. Analyze them using tools like GCViewer or GCeasy.io.
+*   **VisualVM / JConsole**: Monitor heap usage in real-time.
+*   **Heap Dumps**: Take a snapshot of memory to find memory leaks.
+
+## Conclusion
+
+Garbage Collection is a complex beast, but understanding its fundamentals is crucial for writing scalable Java applications. By choosing the right collector and tuning the JVM appropriately, you can ensure your application runs smoothly under load.
+

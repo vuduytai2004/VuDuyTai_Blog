@@ -1,0 +1,65 @@
+---
+title: "Virtual Threads: The Future of Java Concurrency (Project Loom)"
+description: "Project Loom has arrived! Learn how Virtual Threads in Java 21 change the concurrency landscape, making reactive programming obsolete for many use cases."
+image: "/images/blog/extends.webp"
+date: "2025-12-24"
+author: "Tai Vu"
+---
+
+
+# Virtual Threads: The Future of Java Concurrency (Project Loom)
+
+For decades, the unit of concurrency in Java has been the `Thread`. These "platform threads" are wrappers around operating system (OS) threads. While robust, they are expensive to create and manage. A typical server can handle maybe a few thousand platform threads before running out of memory. This limitation led to the rise of asynchronous, reactive programming frameworks (like WebFlux) to handle high concurrency, often at the cost of code complexity.
+
+**Enter Java 21 and Virtual Threads.**
+
+## What are Virtual Threads?
+
+Virtual threads are user-mode threads managed by the JVM, not the OS. They are:
+*   **Lightweight**: You can create *millions* of them in a single JVM.
+*   **Cheap**: Creation time is negligible.
+*   **Blocking is Free**: When a virtual thread blocks (e.g., waiting for I/O), the underlying OS thread is freed up to do other work.
+
+## The Problem with Platform Threads (Thread-per-Request)
+
+In the classic "Thread-per-Request" model, a web server assigns one thread to handle an entire request. If the request involves a database call taking 100ms, that expensive OS thread sits idle for 100ms. This limits scalability.
+
+## The Solution: Virtual Threads
+
+With virtual threads, we can stick to the simple "Thread-per-Request" style. When your code makes that DB call, the JVM unmounts the virtual thread, and the OS thread goes off to serve another virtual thread. When the data arrives, the JVM reschedules the virtual thread.
+
+```java
+// Creating a Virtual Thread
+Thread.startVirtualThread(() -> {
+    System.out.println("Running in a virtual thread!");
+});
+
+// Using an ExecutorService with Virtual Threads
+try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
+    IntStream.range(0, 100_000).forEach(i -> {
+        executor.submit(() -> {
+            Thread.sleep(Duration.ofSeconds(1)); // This doesn't block an OS thread!
+            return i;
+        });
+    });
+}
+```
+
+In the example above, we spawn 100,000 threads. If these were platform threads, the application would likely crash. With virtual threads, it runs smoothly on a modest laptop.
+
+## Benefits over Reactive Programming
+
+Reactive programming (RxJava, Reactor) solves the scalability issue but introduces "Callback Hell" and makes debugging/stack-traces a nightmare. Virtual threads give you the **scalability of asynchronous code** with the **simplicity of synchronous code**.
+
+*   Standard control flow (loops, try-catch) works as expected.
+*   Stack traces are meaningful.
+*   Debuggers work normally.
+
+## Determining When to Use Them
+
+Virtual threads are ideal for **I/O-bound tasks** (web servers, database calls, microservices). They are *not* a replacement for platform threads for **CPU-bound tasks** (video processing, heavy math), as switching threads won't help if the CPU core is already 100% busy.
+
+## Conclusion
+
+Virtual threads are widely considered the biggest change to Java since Lambdas in Java 8. They allow us to write simple, blocking code that scales like crazy. It's time to retire those complex reactive pipelines and embrace the simplicity of blocking I/O again!
+

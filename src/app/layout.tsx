@@ -6,12 +6,14 @@ import { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import App from "@/components/app";
 
+import { LanguageProvider } from "@/providers/language-provider";
+
 const lexend = Lexend({ subsets: ["latin"], variable: "--font-lexend" });
 
 export const metadata: Metadata = {
   title: {
-    template: "%s | Vũ Duy Tài",
-    default: "Vũ Duy Tài",
+    template: "%s | VU DUY TAI",
+    default: "VU DUY TAI",
   },
 };
 
@@ -26,7 +28,7 @@ export default function RootLayout({
   children: ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en">
       <body
         className={cn(
           "min-h-screen antialiased font-lexend bg-background",
@@ -34,7 +36,9 @@ export default function RootLayout({
           fontCode.variable,
         )}
       >
-        <App>{children}</App>
+        <LanguageProvider>
+          <App>{children}</App>
+        </LanguageProvider>
       </body>
     </html>
   );

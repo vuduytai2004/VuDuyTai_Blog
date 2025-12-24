@@ -1,14 +1,16 @@
 import { Icons } from "@/components/icons";
 import { siteConfig } from "@/config/site";
-import { Bot, Rss } from "lucide-react";
+import { Home, BookOpen, UserRound, MessageSquare } from "lucide-react";
 
 export const NAV_LIST = [
-  { label: "Blog", path: "/blog", icon: Rss },
-  { label: "About", path: "/about", icon: Bot },
+  { label: "Home", path: "/", icon: Home },
+  { label: "Blog", path: "/blog", icon: BookOpen },
+  { label: "About", path: "/about", icon: UserRound },
+  { label: "Contact", path: "/contact", icon: MessageSquare },
 ];
 
 export const SOCIALS = [
   { label: "Github", path: siteConfig.social.github, icon: Icons.github },
   { label: "Facebook", path: siteConfig.social.facebook, icon: Icons.facebook },
-  { label: "Twitter", path: siteConfig.social.twitter, icon: Icons.x },
+  { label: "Instagram", path: siteConfig.social.instagram, icon: Icons.instagram },
 ];

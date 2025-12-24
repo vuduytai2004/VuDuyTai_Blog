@@ -4,48 +4,72 @@
 
 @layer base {
   :root {
-    --background: 270 100% 95%;
-    --foreground: 270 5% 0%;
-    --card: 270 50% 90%;
-    --card-foreground: 270 5% 10%;
-    --popover: 270 100% 95%;
-    --popover-foreground: 270 100% 0%;
-    --primary: 270 95.2% 75.3%;
-    --primary-foreground: 0 0% 0%;
-    --secondary: 270 30% 70%;
-    --secondary-foreground: 0 0% 0%;
-    --muted: 232 30% 85%;
-    --muted-foreground: 270 5% 35%;
-    --accent: 232 30% 80%;
-    --accent-foreground: 270 5% 10%;
-    --destructive: 0 100% 30%;
-    --destructive-foreground: 270 5% 90%;
-    --border: 270 30% 50%;
-    --input: 270 30% 18%;
-    --ring: 270 95.2% 75.3%;
-    --radius: 0.5rem;
+    /* Beautiful Light Theme with Soft Blue Tones */
+    --background: 210 30% 98%;
+    /* Very subtle blue-white */
+    --foreground: 210 50% 10%;
+    /* Deep blue-black for text */
+
+    --card: 0 0% 100%;
+    --card-foreground: 210 50% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 210 50% 10%;
+
+    --primary: 210 90% 50%;
+    /* Vibrant Blue */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 210 30% 90%;
+    /* Soft Sky Blue */
+    --secondary-foreground: 210 50% 10%;
+
+    --muted: 210 20% 96%;
+    --muted-foreground: 210 20% 40%;
+
+    --accent: 210 30% 90%;
+    --accent-foreground: 210 50% 10%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 210 20% 90%;
+    --input: 210 20% 90%;
+    --ring: 210 90% 50%;
+
+    --radius: 0.75rem;
+    /* More rounded corners */
   }
+
   .dark {
-    --background: 270 50% 5%;
-    --foreground: 270 5% 90%;
-    --card: 270 50% 0%;
-    --card-foreground: 270 5% 90%;
-    --popover: 270 50% 5%;
-    --popover-foreground: 270 5% 90%;
-    --primary: 270 95.2% 75.3%;
-    --primary-foreground: 0 0% 0%;
-    --secondary: 270 30% 10%;
+    /* Enhanced Dark Mode (Deep Ocean) */
+    --background: 210 50% 5%;
+    --foreground: 210 10% 90%;
+
+    --card: 210 50% 7%;
+    --card-foreground: 210 10% 90%;
+
+    --popover: 210 50% 5%;
+    --popover-foreground: 210 10% 90%;
+
+    --primary: 210 90% 50%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 210 30% 15%;
     --secondary-foreground: 0 0% 100%;
-    --muted: 232 30% 15%;
-    --muted-foreground: 270 5% 60%;
-    --accent: 232 30% 15%;
-    --accent-foreground: 270 5% 90%;
-    --destructive: 0 100% 30%;
-    --destructive-foreground: 270 5% 90%;
-    --border: 270 30% 18%;
-    --input: 270 30% 18%;
-    --ring: 270 95.2% 75.3%;
-    --radius: 0.5rem;
+
+    --muted: 210 30% 15%;
+    --muted-foreground: 210 10% 60%;
+
+    --accent: 210 30% 15%;
+    --accent-foreground: 210 10% 90%;
+
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 0 0% 90%;
+
+    --border: 210 30% 18%;
+    --input: 210 30% 18%;
+    --ring: 210 90% 65%;
   }
 }
 
@@ -53,7 +77,13 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
+    /* Subtle Blue/Cyan Gradient */
+    background-image:
+      radial-gradient(circle at 0% 0%, hsla(210, 60%, 90%, 0.4) 0%, transparent 50%),
+      radial-gradient(circle at 100% 100%, hsla(190, 60%, 90%, 0.4) 0%, transparent 50%);
+    background-attachment: fixed;
   }
 }
