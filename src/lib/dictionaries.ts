@@ -1,0 +1,92 @@
+export type Locale = "en" | "vn";
+
+export type Dictionary = {
+    nav: {
+        home: string;
+        blog: string;
+        about: string;
+        contact: string;
+    };
+    home: {
+        description: string;
+        my_blog: string;
+        latest_posts: string;
+        see_all_posts: string;
+        no_posts: string;
+    };
+    about: {
+        title: string;
+        description: string;
+        job_title: string;
+        bio: string;
+    };
+    footer: {
+        created_by: string;
+    };
+    blog: {
+        see_all: string;
+        published_on: string;
+        back: string;
+    }
+};
+
+export const dictionaries: Record<Locale, Dictionary> = {
+    en: {
+        nav: {
+            home: "Home",
+            blog: "Blog",
+            about: "About",
+            contact: "Contact",
+        },
+        home: {
+            description: "VU DUY TAI's personal blog.",
+            my_blog: "🎉 My Blog",
+            latest_posts: "Latest Posts",
+            see_all_posts: "See all posts",
+            no_posts: "No posts found",
+        },
+        about: {
+            title: "About",
+            description: "Let's get to know each other",
+            job_title: "Network Engineer",
+            bio: "I am an Information Technology student at Ho Chi Minh City University of Technology (HUTECH) with a strong interest in computer networking. During my studies, I practiced configuring routers and switches using Cisco Packet Tracer and GNS3, and learned basic network monitoring and troubleshooting. These experiences helped me understand the importance of stable and secure networks, and motivated me to pursue a career as a Network Engineer.",
+        },
+        footer: {
+            created_by: "Created by",
+        },
+        blog: {
+            see_all: "See all Blogs",
+            published_on: "Published on",
+            back: "Back",
+        }
+    },
+    vn: {
+        nav: {
+            home: "Trang Chủ",
+            blog: "Bài Viết",
+            about: "Giới Thiệu",
+            contact: "Liên Hệ",
+        },
+        home: {
+            description: "Blog cá nhân của VŨ DUY TÀI.",
+            my_blog: "🎉 Blog Của Tôi",
+            latest_posts: "Bài Viết Mới Nhất",
+            see_all_posts: "Xem tất cả bài viết",
+            no_posts: "Không tìm thấy bài viết nào",
+        },
+        about: {
+            title: "Giới Thiệu",
+            description: "Hãy cùng tìm hiểu nhau nhé",
+            job_title: "Kỹ Sư Mạng",
+            bio: "Mình là sinh viên Công nghệ thông tin trường Đại học Công nghệ TP.HCM (HUTECH) với niềm đam mê mạng máy tính. Trong quá trình học, mình đã thực hành cấu hình router, switch trên Cisco Packet Tracer, GNS3 và tìm hiểu về giám sát, xử lý sự cố mạng cơ bản. Những trải nghiệm này giúp mình hiểu rõ tầm quan trọng của hệ thống mạng ổn định, bảo mật và thôi thúc mình theo đuổi con đường trở thành Network Engineer.",
+        },
+        footer: {
+            created_by: "Được tạo bởi",
+        },
+        blog: {
+            see_all: "Xem tất cả bài viết",
+            published_on: "Đăng ngày",
+            back: "Quay lại",
+        }
+    },
+};

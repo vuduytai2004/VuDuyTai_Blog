@@ -1,0 +1,89 @@
+---
+title: "Handling Exceptions in Java: Best Practices and Patterns"
+description: "Exceptions are friend, not foe. Learn the difference between Checked and Unchecked exceptions, when to use custom exceptions, and patterns for robust error handling."
+image: "/images/blog/how-to-type-env.webp"
+date: "2025-12-24"
+author: "Tai Vu"
+---
+
+
+# Handling Exceptions in Java: Best Practices and Patterns
+
+Exception handling is a mechanism to handle runtime errors so that the normal flow of the application can be maintained. Java distinguishes itself with its Checked Exception mechanism, a topic of much debate. This article outlines how to handle exceptions effectively in modern Java applications.
+
+## The Hierarchy
+
+*   **Throwable**: The root of all errors and exceptions.
+    *   **Error**: Serious problems that a reasonable application should not try to catch (e.g., `OutOfMemoryError`, `StackOverflowError`).
+    *   **Exception**: Conditions that a reasonable application might want to catch.
+        *   **RuntimeException**: Unchecked exceptions (e.g., `NullPointerException`, `IllegalArgumentException`).
+        *   **Others**: Checked exceptions (e.g., `IOException`, `SQLException`).
+
+## Checked vs. Unchecked
+
+**Checked Exceptions** are enforced by the compiler. You *must* handle them (try-catch) or declare them (throws). Use them for recoverable conditions where the caller can reasonably take a corrective action.
+*Example: File not found (prompt user for new path).*
+
+**Unchecked Exceptions** are not enforced. They usually represent programming errors.
+*Example: Passing null to a method that requires a value.*
+
+## Best Practices
+
+### 1. Never Swallow Exceptions
+The strict "don't do this" rule.
+
+```java
+try {
+    doSomething();
+} catch (Exception e) {
+    // EMPTY BLOCK - CRIMINAL OFFENSE!
+}
+```
+If you catch it, handle it. If you can't handle it, log it and/or rethrow it.
+
+### 2. Throw Early, Catch Late
+Validate parameters at the very beginning of your methods (`Throw Early`). Handle errors at the high-level boundary of your application, like a Controller or CLI handler (`Catch Late`).
+
+```java
+public void process(User user) {
+    if (user == null) {
+        throw new IllegalArgumentException("User cannot be null");
+    }
+    // ... logic
+}
+```
+
+### 3. Wrap Exceptions (Exception Translation)
+Don't let implementation details leak. If your DAO layer throws a `SQLException`, your Service layer shouldn't pass that to the Controller. Wrap it in a logical, custom exception.
+
+```java
+try {
+    database.findUser();
+} catch (SQLException e) {
+    throw new UserNotFoundException("User lookup failed", e); // Pass 'e' as cause!
+}
+```
+**Crucial**: Always pass the original exception as the "cause" so stack traces aren't lost.
+
+### 4. Use Standard Exceptions
+Reuse standard exceptions when they fit. The calling code already knows what they mean.
+*   `IllegalArgumentException`
+*   `IllegalStateException`
+*   `UnsupportedOperationException`
+
+### 5. Try-with-Resources
+Since Java 7, always use `try-with-resources` for AutoCloseable resources (Streams, Connections) to prevent memory leaks.
+
+```java
+try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+    return br.readLine();
+} catch (IOException e) {
+    // Handle it
+}
+```
+The JVM will automatically close the reader, even if an exception occurs.
+
+## Conclusion
+
+Proper exception handling makes your application robust and easier to debug. Treat exceptions as part of your API's contract, not just annoyances to be silenced.
+
