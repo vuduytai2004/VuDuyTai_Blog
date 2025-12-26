@@ -1,4 +1,4 @@
-import authorAvatar from "../../public/images/author/vuduytai.png";
+import authorAvatar from "../../public/images/author/vuduytai_portrait.png";
 export const siteConfig = {
   name: "VU DUY TAI",
   description:

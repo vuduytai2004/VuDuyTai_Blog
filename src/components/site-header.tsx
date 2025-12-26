@@ -11,7 +11,7 @@ import MobileNav from "@/components/mobile-nav";
 export default function SiteHeader() {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   return (
-    <header className="sticky top-0 z-40 bg-background px-2">
+    <header className="sticky top-0 z-40 bg-background/70 backdrop-blur-lg px-2">
       <div className="container relative flex h-16 max-w-screen-2xl items-center justify-center">
         <HeaderNav />
 

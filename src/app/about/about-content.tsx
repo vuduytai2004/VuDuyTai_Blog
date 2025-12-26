@@ -102,10 +102,10 @@ export default function AboutContent() {
                     <div className="flex flex-col items-center gap-2 px-4">
                         <Image
                             src={siteConfig.authorImage}
-                            width={120}
-                            height={120}
+                            width={160}
+                            height={160}
                             alt={siteConfig.name}
-                            className="size-[120px] rounded-full border-4 border-background bg-primary object-cover shadow-sm"
+                            className="size-[160px] rounded-full border-4 border-background bg-primary object-cover shadow-sm"
                         />
                         <h3 className="mt-4 text-xl font-bold text-black">{siteConfig.author}</h3>
                         <p className="text-center text-sm font-medium text-black/80">

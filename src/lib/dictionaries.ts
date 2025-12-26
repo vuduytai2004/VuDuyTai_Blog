@@ -9,6 +9,7 @@ export type Dictionary = {
     };
     home: {
         description: string;
+        hero_title: string; // Added new key
         my_blog: string;
         latest_posts: string;
         see_all_posts: string;
@@ -39,7 +40,8 @@ export const dictionaries: Record<Locale, Dictionary> = {
             contact: "Contact",
         },
         home: {
-            description: "VU DUY TAI's personal blog.",
+            description: "A personal space by Vu Duy Tai",
+            hero_title: "Hi, I'm Vu Duy Tai 👋",
             my_blog: "🎉 My Blog",
             latest_posts: "Latest Posts",
             see_all_posts: "See all posts",
@@ -68,7 +70,8 @@ export const dictionaries: Record<Locale, Dictionary> = {
             contact: "Liên Hệ",
         },
         home: {
-            description: "Blog cá nhân của VŨ DUY TÀI.",
+            description: "Một không gian riêng của Vũ Duy Tài",
+            hero_title: "Chào, mình là Vũ Duy Tài 👋",
             my_blog: "🎉 Blog Của Tôi",
             latest_posts: "Bài Viết Mới Nhất",
             see_all_posts: "Xem tất cả bài viết",

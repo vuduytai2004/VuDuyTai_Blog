@@ -16,7 +16,7 @@ export default function ContactPage() {
         <div className="container relative max-w-6xl py-6 lg:py-10">
             <PageHeader
                 title="Contact"
-                description="Get in touch with me"
+                description="Let’s connect and collaborate."
             />
             <hr className="my-8" />
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
