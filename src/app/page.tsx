@@ -6,7 +6,7 @@ import Link from "next/link";
 import { blogs as allBlogs } from "#site/content";
 import Image from "next/image";
 import { useLanguage } from "@/providers/language-provider";
-import { ArrowRight, Calendar, Clock } from "lucide-react";
+import { ArrowRight, Calendar } from "lucide-react";
 
 export default function Home() {
     const { t } = useLanguage();

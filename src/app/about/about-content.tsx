@@ -177,7 +177,7 @@ export default function AboutContent() {
                     <div className="relative space-y-8 border-l-2 border-muted pl-6">
                         {experience.map((item, index) => (
                             <div key={index} className="relative">
-                                <span className="absolute -left-[29px] top-1 h-3 w-3 rounded-full border-2 border-foreground bg-background" />
+                                <span className="absolute left-[-29px] top-1 h-3 w-3 rounded-full border-2 border-foreground bg-background" />
                                 <h3 className="text-xl font-bold">{item.role}</h3>
                                 <p className="text-sm font-semibold text-primary">
                                     @ {item.company} {'//'} {item.period}
