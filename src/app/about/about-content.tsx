@@ -13,19 +13,19 @@ import { Certificates } from "@/components/certificates";
 import { useLanguage } from "@/providers/language-provider";
 
 const SKILLS_LEFT = [
-    { name: "Leadership", rating: 3 },
-    { name: "Project management", rating: 2 },
-    { name: "Strategic planning", rating: 2 },
-    { name: "Researching", rating: 3 },
-    { name: "Teamwork", rating: 4 },
-    { name: "Public speaking", rating: 1 },
+    { name: "Lãnh đạo", rating: 3 },
+    { name: "Quản lý dự án", rating: 2 },
+    { name: "Lập kế hoạch chiến lược", rating: 2 },
+    { name: "Nghiên cứu", rating: 3 },
+    { name: "Làm việc nhóm", rating: 4 },
+    { name: "Thuyết trình", rating: 1 },
 ];
 
 const SKILLS_RIGHT = [
-    { name: "Copywriting", rating: 1 },
-    { name: "Translation", rating: 2 },
-    { name: "English", text: "Basic" },
-    { name: "Microsoft Office", rating: 3, subtext: "(Word, Powerpoint, Excel)" },
+    { name: "Viết nội dung", rating: 1 },
+    { name: "Biên dịch", rating: 2 },
+    { name: "Tiếng Anh", text: "Cơ bản" },
+    { name: "Tin học văn phòng", rating: 3, subtext: "(Word, Powerpoint, Excel)" },
 ];
 
 const EXPERIENCE_EN = [
