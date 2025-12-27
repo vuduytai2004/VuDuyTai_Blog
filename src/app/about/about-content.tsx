@@ -142,7 +142,7 @@ export default function AboutContent() {
                 <section>
                     <h2 className="mb-8 flex items-center text-2xl font-bold uppercase text-foreground">
                         <span className="mr-2 inline-block size-4 bg-foreground" />
-                        SKILLS
+                        KỸ NĂNG
                     </h2>
                     <div className="grid gap-8 md:grid-cols-2">
                         <div className="space-y-4">
@@ -172,7 +172,7 @@ export default function AboutContent() {
                 <div className="space-y-6">
                     <h2 className="flex items-center text-2xl font-bold uppercase text-foreground">
                         <span className="mr-2 inline-block size-4 bg-foreground" />
-                        EXPERIENCE
+                        KINH NGHIỆM
                     </h2>
                     <div className="relative space-y-8 border-l-2 border-muted pl-6">
                         {experience.map((item, index) => (
@@ -192,7 +192,7 @@ export default function AboutContent() {
             <div className="flex flex-col space-y-6">
                 <h2 className="flex items-center text-2xl font-bold uppercase text-foreground">
                     <span className="mr-2 inline-block size-4 bg-foreground" />
-                    Degree & Certifications
+                    BẰNG CẤP & CHỨNG CHỈ
                 </h2>
                 <Certificates />
             </div>

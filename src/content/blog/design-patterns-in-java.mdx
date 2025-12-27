@@ -1,20 +1,19 @@
 ---
-title: "Essential Design Patterns for Java Developers"
-description: "Don't reinvent the wheel. Learn how to implement classic GoF design patterns like Singleton, Factory, Builder, and Observer in Java."
+title: "Các Mẫu Thiết Kế Cơ Bản cho Lập Trình Viên Java"
+description: "Đừng phát minh lại bánh xe. Hãy học cách triển khai các mẫu thiết kế GoF cổ điển như Singleton, Factory, Builder, và Observer trong Java."
 image: "/images/blog/design-patterns.png"
 date: "2025-12-24"
 author: "Tai Vu"
 ---
 
+# Các Mẫu Thiết Kế Cơ Bản cho Lập Trình Viên Java
 
-# Essential Design Patterns for Java Developers
+Các mẫu thiết kế (Design patterns) là những giải pháp đã được chứng minh cho các vấn đề thiết kế phần mềm phổ biến. Chúng cung cấp một ngôn ngữ chung cho các nhà phát triển và giúp tạo ra code linh hoạt, có thể tái sử dụng và dễ bảo trì. Trong bài viết này, chúng ta sẽ khám phá một số mẫu được sử dụng rộng rãi nhất trong Java.
 
-Design patterns are proven solutions to common software design problems. They provide a shared vocabulary for developers and help create flexible, reusable, and maintainable code. Here we explore some of the most widely used patterns in Java.
-
-## Creational Patterns
+## Nhóm Khởi Tạo (Creational Patterns)
 
 ### 1. Singleton
-Ensures a class has only one instance and provides a global point of access to it.
+Đảm bảo một class chỉ có duy nhất một instance (thể hiện) và cung cấp một điểm truy cập toàn cục đến nó.
 
 ```java
 public class DatabaseConnection {
@@ -30,10 +29,10 @@ public class DatabaseConnection {
     }
 }
 ```
-*Use case: Logging, Driver objects, Caching.*
+*Trường hợp sử dụng: Logging, đối tượng Driver, Caching.*
 
 ### 2. Builder Pattern
-Separates the construction of a complex object from its representation. It allows you to create immutable objects with a fluent API.
+Tách biệt việc xây dựng một đối tượng phức tạp khỏi biểu diễn của nó. Nó cho phép bạn tạo các đối tượng bất biến (immutable) với một fluent API.
 
 ```java
 User user = new User.Builder()
@@ -42,17 +41,17 @@ User user = new User.Builder()
     .age(22)
     .build();
 ```
-*Use case: Classes with many constructor parameters, mostly optional.*
+*Trường hợp sử dụng: Các class có nhiều tham số khởi tạo, phần lớn là tùy chọn.*
 
 ### 3. Factory Method
-Defines an interface for creating an object, but let subclasses decide which class to instantiate.
+Định nghĩa một interface để tạo một đối tượng, nhưng để cho các subclass quyết định class nào sẽ được khởi tạo.
 
-## Behavioral Patterns
+## Nhóm Hành Vi (Behavioral Patterns)
 
 ### 1. Observer Pattern
-Defines a one-to-many dependency between objects so that when one object changes state, all its dependents are notified automatically.
+Định nghĩa một sự phụ thuộc một-nhiều giữa các đối tượng để khi một đối tượng thay đổi trạng thái, tất cả các đối tượng phụ thuộc của nó sẽ được thông báo tự động.
 
-*Use case: Event listeners, UI updates, Social media feeds.*
+*Trường hợp sử dụng: Event listeners, cập nhật UI, Social media feeds.*
 
 ```java
 interface Observer { void update(String msg); }
@@ -67,7 +66,7 @@ class Channel {
 ```
 
 ### 2. Strategy Pattern
-Defines a family of algorithms, encapsulates each one, and makes them interchangeable.
+Định nghĩa một họ các thuật toán, đóng gói từng thuật toán lại và làm cho chúng có thể thay thế lẫn nhau.
 
 ```java
 interface PaymentStrategy { void pay(int amount); }
@@ -75,22 +74,21 @@ interface PaymentStrategy { void pay(int amount); }
 class CreditCardStrategy implements PaymentStrategy { ... }
 class PayPalStrategy implements PaymentStrategy { ... }
 
-// Usage
+// Sử dụng
 cart.pay(new PayPalStrategy());
 ```
-*Use case: Payment methods, sorting algorithms, compression strategies.*
+*Trường hợp sử dụng: Phương thức thanh toán, thuật toán sắp xếp, chiến lược nén.*
 
-## Structural Patterns
+## Nhóm Cấu Trúc (Structural Patterns)
 
 ### 1. Adapter Pattern
-Allows objects with incompatible interfaces to collaborate. It acts as a wrapper.
-*Use case: Integrating new libraries with legacy code.*
+Cho phép các đối tượng với các interface không tương thích có thể làm việc cùng nhau. Nó hoạt động như một lớp bọc (wrapper).
+*Trường hợp sử dụng: Tích hợp thư viện mới với code cũ (legacy).*
 
 ### 2. Decorator Pattern
-Attaches new responsibilities to an object dynamically.
-*Use case: Java I/O streams (`new BufferedReader(new FileReader(...))`).*
+Gắn thêm các trách nhiệm mới cho một đối tượng một cách động.
+*Trường hợp sử dụng: Java I/O streams (`new BufferedReader(new FileReader(...))`).*
 
-## Conclusion
+## Kết luận
 
-Design patterns are not rules, but guidelines. Overusing them can lead to unnecessary complexity. However, knowing *when* to apply them separates a junior developer from a senior architect.
-
+Các mẫu thiết kế không phải là luật lệ, mà là hướng dẫn. Lạm dụng chúng có thể dẫn đến sự phức tạp không cần thiết. Tuy nhiên, việc biết *khi nào* nên áp dụng chúng là điểm khác biệt giữa một lập trình viên junior và một kiến trúc sư phần mềm senior.

@@ -18,8 +18,8 @@ export default function BlogList() {
     return (
         <div className="container max-w-4xl py-6 lg:py-10">
             <PageHeader
-                title="Blog"
-                description="Sharing ideas and projects through a Velite-based blog."
+                title={t.blog.title}
+                description={t.blog.description}
             />
             <hr className="my-8" />
 
@@ -62,7 +62,7 @@ export default function BlogList() {
                                     )}
                                 </div>
                                 <div className="mt-6 flex items-center text-sm font-medium text-primary opacity-0 -translate-x-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0">
-                                    Read more <ArrowRight className="ml-1 h-4 w-4" />
+                                    {t.blog.read_more} <ArrowRight className="ml-1 h-4 w-4" />
                                 </div>
                             </div>
                             <Link href={blog.slug} className="absolute inset-0">

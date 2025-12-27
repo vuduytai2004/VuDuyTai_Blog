@@ -27,8 +27,16 @@ export type Dictionary = {
     blog: {
         see_all: string;
         published_on: string;
+
         back: string;
-    }
+        title: string; // Added
+        description: string; // Added
+        read_more: string; // Added
+    };
+    contact: {
+        title: string;
+        description: string;
+    };
 };
 
 export const dictionaries: Record<Locale, Dictionary> = {
@@ -60,7 +68,14 @@ export const dictionaries: Record<Locale, Dictionary> = {
             see_all: "See all Blogs",
             published_on: "Published on",
             back: "Back",
-        }
+            title: "Blog",
+            description: "Sharing ideas and projects through a Velite-based blog.",
+            read_more: "Read more",
+        },
+        contact: {
+            title: "Contact",
+            description: "Let's connect and collaborate.",
+        },
     },
     vn: {
         nav: {
@@ -90,6 +105,13 @@ export const dictionaries: Record<Locale, Dictionary> = {
             see_all: "Xem tất cả bài viết",
             published_on: "Đăng ngày",
             back: "Quay lại",
-        }
+            title: "Bài Viết",
+            description: "Chia sẻ ý tưởng và dự án thông qua blog.",
+            read_more: "Đọc tiếp",
+        },
+        contact: {
+            title: "Liên Hệ",
+            description: "Hãy kết nối và hợp tác.",
+        },
     },
 };

@@ -1,48 +1,47 @@
 ---
-title: "Handling Exceptions in Java: Best Practices and Patterns"
-description: "Exceptions are friend, not foe. Learn the difference between Checked and Unchecked exceptions, when to use custom exceptions, and patterns for robust error handling."
+title: "Xử lý Ngoại lệ trong Java: Các Thực tiễn Tốt nhất và Mẫu"
+description: "Ngoại lệ là bạn, không phải thù. Tìm hiểu sự khác biệt giữa Checked và Unchecked exceptions, khi nào nên sử dụng exception tùy chỉnh, và các mẫu để xử lý lỗi mạnh mẽ."
 image: "/images/blog/handling-exceptions-in-java.png"
 date: "2025-12-24"
 author: "Tai Vu"
 ---
 
+# Xử lý Ngoại lệ trong Java: Các Thực tiễn Tốt nhất và Mẫu
 
-# Handling Exceptions in Java: Best Practices and Patterns
+Xử lý ngoại lệ là một cơ chế để xử lý các lỗi runtime để luồng bình thường của ứng dụng có thể được duy trì. Java phân biệt chính nó với cơ chế Checked Exception, một chủ đề gây nhiều tranh luận. Bài viết này phác thảo cách xử lý ngoại lệ hiệu quả trong các ứng dụng Java hiện đại.
 
-Exception handling is a mechanism to handle runtime errors so that the normal flow of the application can be maintained. Java distinguishes itself with its Checked Exception mechanism, a topic of much debate. This article outlines how to handle exceptions effectively in modern Java applications.
+## Phân cấp (The Hierarchy)
 
-## The Hierarchy
-
-*   **Throwable**: The root of all errors and exceptions.
-    *   **Error**: Serious problems that a reasonable application should not try to catch (e.g., `OutOfMemoryError`, `StackOverflowError`).
-    *   **Exception**: Conditions that a reasonable application might want to catch.
-        *   **RuntimeException**: Unchecked exceptions (e.g., `NullPointerException`, `IllegalArgumentException`).
-        *   **Others**: Checked exceptions (e.g., `IOException`, `SQLException`).
+*   **Throwable**: Gốc của tất cả các lỗi và ngoại lệ.
+    *   **Error**: Các vấn đề nghiêm trọng mà một ứng dụng hợp lý không nên cố gắng bắt (ví dụ: `OutOfMemoryError`, `StackOverflowError`).
+    *   **Exception**: Các điều kiện mà một ứng dụng hợp lý có thể muốn bắt.
+        *   **RuntimeException**: Ngoại lệ không được kiểm tra (Unchecked exceptions) (ví dụ: `NullPointerException`, `IllegalArgumentException`).
+        *   **Others**: Ngoại lệ được kiểm tra (Checked exceptions) (ví dụ: `IOException`, `SQLException`).
 
 ## Checked vs. Unchecked
 
-**Checked Exceptions** are enforced by the compiler. You *must* handle them (try-catch) or declare them (throws). Use them for recoverable conditions where the caller can reasonably take a corrective action.
-*Example: File not found (prompt user for new path).*
+**Checked Exceptions** được trình biên dịch bắt buộc. Bạn *phải* xử lý chúng (try-catch) hoặc khai báo chúng (throws). Sử dụng chúng cho các điều kiện có thể phục hồi nơi người gọi có thể thực hiện hành động sửa chữa hợp lý.
+*Ví dụ: Không tìm thấy tệp (nhắc người dùng nhập đường dẫn mới).*
 
-**Unchecked Exceptions** are not enforced. They usually represent programming errors.
-*Example: Passing null to a method that requires a value.*
+**Unchecked Exceptions** không bị bắt buộc. Chúng thường đại diện cho các lỗi lập trình.
+*Ví dụ: Truyền null vào một phương thức yêu cầu một giá trị.*
 
-## Best Practices
+## Các Thực tiễn Tốt nhất (Best Practices)
 
-### 1. Never Swallow Exceptions
-The strict "don't do this" rule.
+### 1. Không bao giờ nuốt ngoại lệ (Swallow Exceptions)
+Quy tắc nghiêm ngặt "đừng làm điều này".
 
 ```java
 try {
     doSomething();
 } catch (Exception e) {
-    // EMPTY BLOCK - CRIMINAL OFFENSE!
+    // KHỐI RỖNG - TỘI HÌNH SỰ!
 }
 ```
-If you catch it, handle it. If you can't handle it, log it and/or rethrow it.
+Nếu bạn bắt nó, hãy xử lý nó. Nếu bạn không thể xử lý nó, hãy log nó và/hoặc ném lại (rethrow) nó.
 
-### 2. Throw Early, Catch Late
-Validate parameters at the very beginning of your methods (`Throw Early`). Handle errors at the high-level boundary of your application, like a Controller or CLI handler (`Catch Late`).
+### 2. Ném sớm, Bắt muộn (Throw Early, Catch Late)
+Validate tham số ngay từ đầu phương thức của bạn (`Throw Early`). Xử lý lỗi ở ranh giới cấp cao của ứng dụng, như Controller hoặc CLI handler (`Catch Late`).
 
 ```java
 public void process(User user) {
@@ -53,37 +52,36 @@ public void process(User user) {
 }
 ```
 
-### 3. Wrap Exceptions (Exception Translation)
-Don't let implementation details leak. If your DAO layer throws a `SQLException`, your Service layer shouldn't pass that to the Controller. Wrap it in a logical, custom exception.
+### 3. Bọc Ngoại lệ (Exception Translation)
+Đừng để chi tiết triển khai bị rò rỉ. Nếu lớp DAO của bạn ném ra một `SQLException`, lớp Service của bạn không nên chuyển nó cho Controller. Bọc nó trong một ngoại lệ tùy chỉnh, hợp lý.
 
 ```java
 try {
     database.findUser();
 } catch (SQLException e) {
-    throw new UserNotFoundException("User lookup failed", e); // Pass 'e' as cause!
+    throw new UserNotFoundException("User lookup failed", e); // Truyền 'e' làm nguyên nhân!
 }
 ```
-**Crucial**: Always pass the original exception as the "cause" so stack traces aren't lost.
+**Quan trọng**: Luôn truyền ngoại lệ gốc làm "nguyên nhân" (cause) để stack traces không bị mất.
 
-### 4. Use Standard Exceptions
-Reuse standard exceptions when they fit. The calling code already knows what they mean.
+### 4. Sử dụng Ngoại lệ Tiêu chuẩn
+Tái sử dụng các ngoại lệ tiêu chuẩn khi chúng phù hợp. Code gọi đã biết chúng có nghĩa là gì.
 *   `IllegalArgumentException`
 *   `IllegalStateException`
 *   `UnsupportedOperationException`
 
 ### 5. Try-with-Resources
-Since Java 7, always use `try-with-resources` for AutoCloseable resources (Streams, Connections) to prevent memory leaks.
+Kể từ Java 7, luôn sử dụng `try-with-resources` cho các tài nguyên AutoCloseable (Streams, Connections) để ngăn rò rỉ bộ nhớ.
 
 ```java
 try (BufferedReader br = new BufferedReader(new FileReader(path))) {
     return br.readLine();
 } catch (IOException e) {
-    // Handle it
+    // Xử lý nó
 }
 ```
-The JVM will automatically close the reader, even if an exception occurs.
+JVM sẽ tự động đóng reader, ngay cả khi có ngoại lệ xảy ra.
 
-## Conclusion
+## Kết luận
 
-Proper exception handling makes your application robust and easier to debug. Treat exceptions as part of your API's contract, not just annoyances to be silenced.
-
+Xử lý ngoại lệ đúng cách làm cho ứng dụng của bạn mạnh mẽ và dễ debug hơn. Hãy coi ngoại lệ là một phần của hợp đồng API của bạn, không chỉ là những phiền toái cần được làm im lặng.

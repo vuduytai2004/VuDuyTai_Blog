@@ -1,18 +1,18 @@
 ---
-title: "How to Strongly type process.env"
-description: "Learn how to strongly type process.env in Typescript by either augmentng global type or validating it at runtime with t3-env."
+title: "Làm cách nào để định kiểu mạnh mẽ cho process.env"
+description: "Tìm hiểu cách định kiểu mạnh mẽ cho process.env trong Typescript bằng cách tăng cường kiểu toàn cục hoặc validate nó khi chạy bằng t3-env."
 image: "/images/blog/how-to-type-env.webp"
 date: "2024-05-30"
 author: "devbertskie"
 ---
 
-A common problem in TypeScript is that process.env doesn't give you autocomplete for the environment variables that actually exist in your system:
+Một vấn đề phổ biến trong TypeScript là `process.env` không cung cấp cho bạn tự động hoàn thành (autocomplete) cho các biến môi trường thực sự tồn tại trong hệ thống của bạn:
 
 ```ts
-console.log(process.env.MY_ENV_VARIABLE); // No autocomplete
+console.log(process.env.MY_ENV_VARIABLE); // Không có autocomplete
 ```
 
-They also end up typed as `string | undefined`, which can be annoying if you're passing them into functions that expect a string:
+Chúng cũng kết thúc được định kiểu là `string | undefined`, điều này có thể gây khó chịu nếu bạn đang truyền chúng vào các hàm mong đợi một chuỗi:
 
 ```ts
 const myFunc = (envVar: string) => {
@@ -22,11 +22,11 @@ const myFunc = (envVar: string) => {
 myFunc(process.env.MY_ENV_VARIABLE);
 ```
 
-Here are a few ways to strongly type `process.env`:
+Dưới đây là một vài cách để định kiểu mạnh mẽ cho `process.env`:
 
-## Solution 1: Augment the Global Typescript
+## Giải pháp 1: Tăng cường (Augment) Typescript Toàn cục
 
-You can augment the global type NodeJS.ProcessEnv to include your environment variables:
+Bạn có thể tăng cường kiểu toàn cục `NodeJS.ProcessEnv` để bao gồm các biến môi trường của bạn:
 
 ```ts
 // globals.d.ts
@@ -37,21 +37,21 @@ namespace NodeJS {
 }
 ```
 
-This relies on declaration merging on the global interface `NodeJS.ProcessEnv`, adding an extra property MY_ENV_VARIABLE.
+Điều này dựa trên việc hợp nhất khai báo (declaration merging) trên interface toàn cục `NodeJS.ProcessEnv`, thêm một thuộc tính bổ sung `MY_ENV_VARIABLE`.
 
 ```ts
 myFunc(process.env.MY_ENV_VARIABLE);
 ```
 
-However, this doesn't provide any guarantees that the environment variable actually exists in your system.
+Tuy nhiên, điều này không cung cấp bất kỳ đảm bảo nào rằng biến môi trường thực sự tồn tại trong hệ thống của bạn.
 
-This means that it's useful when you have relatively few environment variables, or can't get buy-in to add an extra library for checking them.
+Điều này có nghĩa là nó hữu ích khi bạn có tương đối ít biến môi trường, hoặc không thể thuyết phục việc thêm một thư viện bổ sung để kiểm tra chúng.
 
-## Solution 2: Validate it at Runtime with `t3-env`
+## Giải pháp 2: Validate nó khi chạy với `t3-env`
 
-If you want to validate that all your environment variables are present at runtime, you can use a library like `t3-env`.
+Nếu bạn muốn xác thực rằng tất cả các biến môi trường của bạn đều hiện diện khi chạy (runtime), bạn có thể sử dụng một thư viện như `t3-env`.
 
-This leverages zod to validate your environment variables at runtime. Here's an example
+Điều này tận dụng `zod` để xác thực các biến môi trường của bạn khi chạy. Đây là một ví dụ:
 
 ```js
 import { createEnv } from "@t3-oss/env-core";
@@ -70,14 +70,14 @@ export const env = createEnv({
 });
 ```
 
-This will fail at runtime if any of the environment variables are missing or don't match the schema. It also means you can leverage Zod's powerful validation capabilities, such as `.url()` or `.min(1)` for strings.
+Điều này sẽ thất bại khi chạy nếu bất kỳ biến môi trường nào bị thiếu hoặc không khớp với schema. Nó cũng có nghĩa là bạn có thể tận dụng khả năng xác thực mạnh mẽ của Zod, chẳng hạn như `.url()` hoặc `.min(1)` cho chuỗi.
 
-It also provides a single source of truth for your environment variables - `env`. This means you can use `env` throughout your codebase, and you'll get autocomplete and type-checking for your environment variables.
+Nó cũng cung cấp một nguồn sự thật duy nhất cho các biến môi trường của bạn - `env`. Điều này có nghĩa là bạn có thể sử dụng `env` trong toàn bộ codebase của mình, và bạn sẽ nhận được tự động hoàn thành và kiểm tra kiểu cho các biến môi trường của mình.
 
-Here's a [great guide](https://env.t3.gg/docs/core) you can use to get started.
+Đây là một [hướng dẫn tuyệt vời](https://env.t3.gg/docs/core) bạn có thể sử dụng để bắt đầu.
 
-## Which Solution Should You Use?
+## Giải pháp nào bạn nên sử dụng?
 
-If your project is small and you don't want to add extra dependencies, augmenting the global type is a good solution.
+Nếu dự án của bạn nhỏ và bạn không muốn thêm các phụ thuộc bổ sung, việc tăng cường kiểu toàn cục là một giải pháp tốt.
 
-But if you're remotely concerned about missing environment variables at runtime, `t3-env` is a great choice.
+Nhưng nếu bạn có chút lo lắng về việc thiếu các biến môi trường khi chạy, `t3-env` là một lựa chọn tuyệt vời.

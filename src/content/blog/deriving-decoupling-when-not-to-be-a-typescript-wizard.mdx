@@ -1,22 +1,22 @@
 ---
-title: "Deriving vs Decoupling: When NOT to be a Typescript Wizard"
-description: "In this book teaser, we discuss deriving vs decoupling your types: when building relationships between your types or segregating them makes sense"
+title: "Deriving vs Decoupling: Khi nào KHÔNG nên làm một 'Phù thủy Typescript'"
+description: "Trong đoạn giới thiệu sách này, chúng ta thảo luận về việc deriving (dẫn xuất) so với decoupling (tách rời) các loại của bạn: khi nào việc xây dựng mối quan hệ giữa các loại hoặc tách biệt chúng là hợp lý"
 image: "/images/blog/derive-decouple.webp"
 date: "2024-05-30"
 author: "devbertskie"
 ---
 
-One of the most common pieces of advice for writing maintainable code is to "Keep code DRY", or more explicitly, "Don't Repeat Yourself".
+Một trong những lời khuyên phổ biến nhất để viết code dễ bảo trì là "Giữ cho code DRY" (Don't Repeat Yourself - Đừng lặp lại chính mình).
 
-One way to do this in JavaScript is to take repeating code and capture it in functions or variables. These variables and functions can be reused, composed and combined in different ways to create new functionality.
+Một cách để làm điều này trong JavaScript là lấy code lặp lại và nắm bắt nó trong các hàm hoặc biến. Các biến và hàm này có thể được sử dụng lại, kết hợp và kết hợp theo nhiều cách khác nhau để tạo chức năng mới.
 
-In TypeScript, we can apply this same principle to types.
+Trong TypeScript, chúng ta có thể áp dụng nguyên tắc tương tự này cho các kiểu (types).
 
-## What Is A Derived Type?
+## Derived Type (Kiểu dẫn xuất) là gì?
 
-A derived type is a type which relies on, or inherits from, a structure of another type. We can create derived types using some of the tools we've used so far.
+Một derived type là một kiểu dựa vào, hoặc kế thừa từ, cấu trúc của một kiểu khác. Chúng ta có thể tạo các derived type bằng cách sử dụng một số công cụ mà chúng ta đã sử dụng cho đến nay.
 
-We could use `interface extends` to make one interface inherit from another:
+Chúng ta có thể sử dụng `interface extends` để làm cho một interface kế thừa từ một interface khác:
 
 ```ts
 interface Album {
@@ -30,9 +30,9 @@ interface AlbumDetails extends Album {
 }
 ```
 
-`AlbumDetails` inherits all of the properties of `Album`. This means that any changes to `Album` will trickle down to `AlbumDetails`. `AlbumDetails` is derived from `Album`.
+`AlbumDetails` kế thừa tất cả các thuộc tính của `Album`. Điều này có nghĩa là bất kỳ thay đổi nào đối với `Album` sẽ ảnh hưởng đến `AlbumDetails`. `AlbumDetails` được dẫn xuất từ `Album`.
 
-Another example is a union type.
+Một ví dụ khác là union type (kiểu hợp).
 
 ```ts
 type Triangle = {
@@ -49,15 +49,15 @@ type Rectangle = {
 type Shape = Triangle | Rectangle;
 ```
 
-A derived type represents a relationship. That relationship is one-way. `Shape` can't go back and modify `Triangle` or `Rectangle`. But any changes to `Triangle` and `Rectangle` will ripple through to `Shape`.
+Một derived type đại diện cho một mối quan hệ. Mối quan hệ đó là một chiều. `Shape` không thể quay lại và sửa đổi `Triangle` hoặc `Rectangle`. Nhưng bất kỳ thay đổi nào đối với `Triangle` và `Rectangle` sẽ lan truyền qua `Shape`.
 
-## Deriving vs Decoupling
+## Deriving vs Decoupling (Dẫn xuất vs Tách rời)
 
-When you derive a type from a source, you're coupling the derived type to that source. If you derive a type from another derived type, this can create long chains of coupling throughout your app that can be hard to manage.
+Khi bạn dẫn xuất một kiểu từ một nguồn, bạn đang ghép (couple) kiểu dẫn xuất vào nguồn đó. Nếu bạn dẫn xuất một kiểu từ một kiểu dẫn xuất khác, điều này có thể tạo ra các chuỗi ghép nối dài trong ứng dụng của bạn mà có thể khó quản lý.
 
-### When Decoupling Makes Sense
+### Khi nào Decoupling (Tách rời) là hợp lý
 
-Let's imagine we have a `User` type in a `db.ts` file:
+Hãy tưởng tượng chúng ta có một kiểu `User` trong tệp `db.ts`:
 
 ```ts
 export type User = {
@@ -65,10 +65,11 @@ export type User = {
   name: string;
   imageUrl: string;
   email: string;
+  bio: string;
 };
 ```
 
-We'll say for this example that we're using a component-based framework like React, Vue or Svelte. We have a `AvatarImage` component that renders an image of the user. We could pass in the `User` type directly:
+Giả sử cho ví dụ này rằng chúng ta đang sử dụng một framework dựa trên component như React, Vue hoặc Svelte. Chúng ta có một component `AvatarImage` hiển thị hình ảnh của người dùng. Chúng ta có thể truyền vào trực tiếp kiểu `User`:
 
 ```ts
 import { User } from "./db";
@@ -77,18 +78,18 @@ export const AvatarImage = (props: { user: User }) => {
 };
 ```
 
-But as it turns out, we're only using the `imageUrl` and `name` properties from the `User` type. It's a good idea to make your functions and components only require the data they need to run. This helps prevent you from passing around unnecessary data.
+Nhưng hóa ra, chúng ta chỉ sử dụng các thuộc tính `imageUrl` và `name` từ kiểu `User`. Ý tưởng hay là làm cho các hàm và component của bạn chỉ yêu cầu dữ liệu chúng cần để chạy. Điều này giúp ngăn bạn truyền dữ liệu không cần thiết.
 
-Let's try deriving. We'll create a new type called `AvatarImageProps` that only includes the properties we need:
+Hãy thử dẫn xuất (deriving). Chúng ta sẽ tạo một kiểu mới gọi là `AvatarImageProps` chỉ bao gồm các thuộc tính chúng ta cần:
 
 ```ts
 import { User } from "./db";
 type AvatarImageProps = Pick<User, "imageUrl" | "name">;
 ```
 
-But let's think for a moment. We've now coupled the `AvatarImageProps` type to the User type. `AvatarImageProps` now not only depends on the shape of `User`, but its existence in the `db.ts` file. This means if we ever move the location of the `User` type, or split it into separate interfaces, we'll need to think about AvatarImageProps.
+Nhưng hãy suy nghĩ một chút. Bây giờ chúng ta đã ghép kiểu `AvatarImageProps` vào kiểu `User`. `AvatarImageProps` bây giờ không chỉ phụ thuộc vào hình dạng của `User`, mà còn sự tồn tại của nó trong tệp `db.ts`. Điều này có nghĩa là nếu chúng ta di chuyển vị trí của kiểu `User`, hoặc chia nó thành các interface riêng biệt, chúng ta sẽ cần suy nghĩ về `AvatarImageProps`.
 
-Let's try the other way around. Instead of deriving AvatarImageProps from `User`, we'll decouple them. We'll create a new type which just has the properties we need:
+Hãy thử cách ngược lại. Thay vì dẫn xuất `AvatarImageProps` từ `User`, chúng ta sẽ tách rời (decouple) chúng. Chúng ta sẽ tạo một kiểu mới chỉ có các thuộc tính chúng ta cần:
 
 ```ts
 type AvatarImageProps = {
@@ -97,15 +98,15 @@ type AvatarImageProps = {
 };
 ```
 
-Now, `AvatarImageProps` is decoupled from `User`. We can move `User` around, split it into separate interfaces, or even delete it, and `AvatarImageProps` will be unaffected.
+Bây giờ, `AvatarImageProps` đã được tách rời khỏi `User`. Chúng ta có thể di chuyển `User` xung quanh, chia nó thành các interface riêng biệt, hoặc thậm chí xóa nó, và `AvatarImageProps` sẽ không bị ảnh hưởng.
 
-In this particular case, decoupling feels like the right choice. This is because `User` and `AvatarImage` are separate concerns. `User` is a data type, while `AvatarImage` is a UI component. They have different responsibilities and different reasons to change. By decoupling them, AvatarImage becomes more portable and easier to maintain.
+Trong trường hợp cụ thể này, decoupling cảm thấy là lựa chọn đúng đắn. Điều này là do `User` và `AvatarImage` là các mối quan tâm riêng biệt. `User` là một kiểu dữ liệu, trong khi `AvatarImage` là một UI component. Chúng có các trách nhiệm khác nhau và lý do khác nhau để thay đổi. Bằng cách tách rời chúng, AvatarImage trở nên di động hơn và dễ bảo trì hơn.
 
-What can make decoupling a difficult decision is that deriving can make you feel 'clever'. `Pick` tempts us because it uses a more advanced feature of TypeScript, which makes us feel good for applying the knowledge we've gained. But often, it's smarter to do the simple thing, and keep your types decoupled.
+Điều có thể làm cho việc tách rời trở thành một quyết định khó khăn là việc dẫn xuất có thể khiến bạn cảm thấy 'thông minh'. `Pick` cám dỗ chúng ta bởi vì nó sử dụng một tính năng nâng cao hơn của TypeScript, điều này khiến chúng ta cảm thấy tốt khi áp dụng kiến thức chúng ta đã đạt được. Nhưng thường thì, thông minh hơn là làm điều đơn giản, và giữ cho các kiểu của bạn được tách rời.
 
-## When Deriving Makes Sense
+## Khi nào Deriving (Dẫn xuất) là hợp lý
 
-Deriving makes most sense when the code you're coupling shares a common concern. The examples in this chapter are good examples of this. Our `as const` object, for instance:
+Việc dẫn xuất có ý nghĩa nhất khi code bạn đang ghép nối chia sẻ một mối quan tâm chung. Các ví dụ trong chương này là những ví dụ điển hình về điều này. Đối tượng `as const` của chúng ta chẳng hạn:
 
 ```ts
 const albumTypes = {
@@ -117,15 +118,15 @@ const albumTypes = {
 type AlbumType = (typeof albumTypes)[keyof typeof albumTypes];
 ```
 
-Here, `AlbumType` is derived from `albumTypes`. If we were to decouple it, we'd have to maintain two closely related sources of truth:
+Ở đây, `AlbumType` được dẫn xuất từ `albumTypes`. Nếu chúng ta tách rời nó, chúng ta sẽ phải duy trì hai nguồn sự thật liên quan chặt chẽ:
 
 ```ts
 type AlbumType = "cd" | "vinyl" | "digital";
 ```
 
-Because both `AlbumType` and `albumTypes` are closely related, deriving AlbumType from `albumTypes` makes sense.
+Bởi vì cả `AlbumType` và `albumTypes` đều liên quan chặt chẽ, việc dẫn xuất AlbumType từ `albumTypes` là hợp lý.
 
-Another example is when one type is directly related to another. For instance, our `User` type might have a `UserWithoutId` type derived from it:
+Một ví dụ khác là khi một kiểu liên quan trực tiếp đến một kiểu khác. Ví dụ, kiểu `User` của chúng ta có thể có kiểu `UserWithoutId` được dẫn xuất từ nó:
 
 ```ts
 type User = {
@@ -142,10 +143,10 @@ const updateUser = (id: string, user: UserWithoutId) => {
 };
 ```
 
-Again, these concerns are closely related. Decoupling them would make our code harder to maintain and introduce more busywork into our codebase.
+Một lần nữa, những mối quan tâm này liên quan chặt chẽ với nhau. Việc tách rời chúng sẽ làm cho code của chúng ta khó bảo trì hơn và đưa thêm nhiều việc bận rộn vào codebase của chúng ta.
 
-The decision to derive or decouple is all about reducing your future workload.
+Quyết định dẫn xuất hay tách rời đều là về việc giảm khối lượng công việc trong tương lai của bạn.
 
-Are the two types so related that updates to one will need to ripple to the other? Derive.
+Liệu hai kiểu có liên quan đến mức các cập nhật cho một kiểu sẽ cần lan truyền sang kiểu kia không? Dẫn xuất.
 
-Are they so unrelated that coupling them could result in more work down the line? Decouple.
+Liệu chúng có không liên quan đến mức việc ghép nối chúng có thể dẫn đến nhiều công việc hơn sau này không? Tách rời.

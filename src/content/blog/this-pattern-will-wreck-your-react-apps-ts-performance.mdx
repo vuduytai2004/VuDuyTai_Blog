@@ -1,22 +1,22 @@
 ---
-title: "This pattern will wreck your React App's TS Performance"
-description: "Imporve React Typescript performance by replacing type & with interface extends. Boost IDE and tsc speed significantly"
+title: "Mẫu này sẽ phá hỏng Hiệu suất TS của Ứng dụng React của bạn"
+description: "Cải thiện hiệu suất React Typescript bằng cách thay thế type & bằng interface extends. Tăng tốc độ IDE và tsc đáng kể"
 image: "/images/blog/extends.webp"
 date: "2024-05-30"
 author: "devbertskie"
 ---
 
-A couple of years ago, Sentry were having big problems with their React app. They'd pretty recently [migrated it to TypeScript](https://blog.sentry.io/slow-and-steady-converting-sentrys-entire-frontend-to-typescript) from JavaScript. And the app was part of a large monorepo.
+Vài năm trước, Sentry đã gặp vấn đề lớn với ứng dụng React của họ. Họ đã [chuyển đổi khá gần đây sang TypeScript](https://blog.sentry.io/slow-and-steady-converting-sentrys-entire-frontend-to-typescript) từ JavaScript. Và ứng dụng là một phần của một monorepo lớn.
 
-But the IDE performance was slow. You'd often need to wait a couple of seconds after making a change for the TypeScript language server to update. And running `tsc` would take a long time.
+Nhưng hiệu suất IDE rất chậm. Bạn thường phải đợi vài giây sau khi thực hiện thay đổi để TypeScript language server cập nhật. Và việc chạy `tsc` sẽ mất nhiều thời gian.
 
-Now, this isn't unusual for a large TypeScript codebase. But the Sentry team had a hunch that something was wrong. The problem felt out of proportion to the size of the codebase.
+Bây giờ, điều này không phải là bất thường đối với một codebase TypeScript lớn. Nhưng nhóm Sentry đã có linh cảm rằng có điều gì đó không ổn. Vấn đề cảm thấy không tương xứng với kích thước của codebase.
 
-It turned out that the issue, outlined by [Jonas](https://twitter.com/JonasBadalic/status/1765006152150974919), was down to a single pattern.
+Hóa ra vấn đề, được phác thảo bởi [Jonas](https://twitter.com/JonasBadalic/status/1765006152150974919), là do một pattern duy nhất.
 
-## How To Tank Your React App's TS Performance
+## Cách làm hỏng Hiệu suất TS của Ứng dụng React của bạn
 
-In tons of places in Sentry's codebase, they were extending HTML types in React. For instance, defining `ButtonProps` would look like this:
+Ở hàng tấn nơi trong codebase của Sentry, họ đã mở rộng các kiểu HTML trong React. Ví dụ, việc xác định `ButtonProps` sẽ trông như thế này:
 
 ```ts
 import React from "react";
@@ -32,7 +32,7 @@ const Button = ({ extraProp, ...props }: ButtonProps) => {
 };
 ```
 
-This means that you could pass in all the props that a `<button>` element could take, plus an `extraProp`:
+Điều này có nghĩa là bạn có thể truyền vào tất cả các props mà một phần tử `<button>` có thể nhận, cộng với một `extraProp`:
 
 ```ts
 <Button
@@ -44,7 +44,7 @@ This means that you could pass in all the props that a `<button>` element could 
 />;
 ```
 
-But it turns out that this pattern is devilishly slow. So Jonas, following the advice of the [TypeScript Performance Wiki](https://github.com/microsoft/TypeScript/wiki/Performance), changed each of these to use an `interface` instead:
+Nhưng hóa ra pattern này chậm khủng khiếp. Vì vậy Jonas, làm theo lời khuyên của [TypeScript Performance Wiki](https://github.com/microsoft/TypeScript/wiki/Performance), đã thay đổi mỗi cái này để sử dụng một `interface` thay thế:
 
 ```ts
 import React from "react";
@@ -54,16 +54,16 @@ interface ButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
 }
 ```
 
-Suddenly, things got a lot snappier. The TypeScript language server was faster, and tsc ran quicker. Just from a little syntax change. Why?
+Đột nhiên, mọi thứ trở nên nhanh hơn nhiều. TypeScript language server nhanh hơn, và tsc chạy nhanh hơn. Chỉ từ một thay đổi cú pháp nhỏ. Tại sao?
 
-## Why did this happens
+## Tại sao điều này xảy ra
 
-You may have heard that `interface` is slightly faster than `type`. This is not quite true. In fact, `interface extends` is slightly faster than `&`.
+Bạn có thể đã nghe nói rằng `interface` nhanh hơn một chút so với `type`. Điều này không hoàn toàn đúng. Trên thực tế, `interface extends` nhanh hơn một chút so với `&`.
 
-In an earlier version of this article, I'd posted an explanation based on some fuzzy thinking which, thanks to my old colleague [Mateusz Burzyński](https://twitter.com/AndaristRake), I now understand was wrong.
+Trong một phiên bản trước của bài viết này, tôi đã đăng một lời giải thích dựa trên một số suy nghĩ mơ hồ mà, nhờ đồng nghiệp cũ của tôi [Mateusz Burzyński](https://twitter.com/AndaristRake), bây giờ tôi hiểu là sai.
 
-The problem is more complex than I realised - check out [this thread](https://twitter.com/AndaristRake/status/1770743549325115459) for his critiques and our investigations.
+Vấn đề phức tạp hơn tôi nhận ra - hãy xem [luồng này](https://twitter.com/AndaristRake/status/1770743549325115459) để biết những lời phê bình và điều tra của chúng tôi.
 
-Hopefully, I can update this article again with a definitive description of why this happens - but nothing is simple when it comes to TypeScript performance.
+Hy vọng rằng, tôi có thể cập nhật bài viết này một lần nữa với mô tả dứt khoát về lý do tại sao điều này xảy ra - nhưng không có gì là đơn giản khi nói đến hiệu suất TypeScript.
 
-Suffice to say - `interface extends` is generally faster than `&`, and so it proved in this case too.
+Chỉ cần nói rằng - `interface extends` thường nhanh hơn `&`, và vì vậy nó cũng được chứng minh trong trường hợp này.

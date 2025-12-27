@@ -1,21 +1,20 @@
 ---
-title: "Leveraging Lambdas and Functional Interfaces in Java"
-description: "A comprehensive tutorial on functional programming in Java. Using Predicate, Consumer, Function, and Supplier interfaces effectively."
+title: "Tận dụng Lambdas và Functional Interfaces trong Java"
+description: "Một hướng dẫn toàn diện về lập trình hàm trong Java. Sử dụng Predicate, Consumer, Function, và Supplier interfaces một cách hiệu quả."
 image: "/images/blog/lambdas-functional-interfaces.png"
 date: "2025-12-23"
 author: "Tai Vu"
 ---
 
+# Tận dụng Lambdas và Functional Interfaces trong Java
 
-# Leveraging Lambdas and Functional Interfaces in Java
+Trước Java 8, Java hoàn toàn hướng đối tượng. Nếu bạn muốn truyền chức năng (functionality), bạn phải bọc nó trong một class hoặc một anonymous inner class. Java 8 đã thay đổi cuộc chơi bằng cách giới thiệu biểu thức Lambda và Functional Interfaces, mang các khái niệm lập trình hàm vào JDK.
 
-Before Java 8, Java was purely object-oriented. If you wanted to pass functionality, you had to wrap it in a class or an anonymous inner class. Java 8 changed the game by introducing Lambda expressions and Functional Interfaces, bringing functional programming concepts to the JDK.
+## Functional Interface là gì?
 
-## What is a Functional Interface?
+Một Functional Interface là một interface chứa chính xác **một phương thức trừu tượng**. Nó có thể có nhiều phương thức mặc định (default) hoặc tĩnh (static), nhưng chỉ có thể có một phương thức trừu tượng.
 
-A Functional Interface is an interface that contains exactly **one abstract method**. It can have multiple default or static methods, but only one abstract one.
-
-The `@FunctionalInterface` annotation ensures this rule is enforced by the compiler.
+Annotation `@FunctionalInterface` đảm bảo quy tắc này được thực thi bởi trình biên dịch.
 
 ```java
 @FunctionalInterface
@@ -24,11 +23,11 @@ public interface Calculator {
 }
 ```
 
-## Lambda Expressions
+## Biểu thức Lambda
 
-Lambdas provide a clear and concise way to represent one method interface using an expression.
+Lambdas cung cấp một cách rõ ràng và ngắn gọn để đại diện cho một interface chỉ có một phương thức bằng một biểu thức.
 
-**Before Java 8 (Anonymous Class):**
+**Trước Java 8 (Anonymous Class):**
 ```java
 Calculator add = new Calculator() {
     @Override
@@ -43,14 +42,14 @@ Calculator add = new Calculator() {
 Calculator add = (a, b) -> a + b;
 ```
 
-## Built-in Functional Interfaces
+## Các Functional Interfaces tích hợp sẵn
 
-Java provides a `java.util.function` package with ready-to-use interfaces. You rarely need to create your own.
+Java cung cấp gói `java.util.function` với các interface sẵn dùng. Bạn hiếm khi cần phải tạo cái riêng của mình.
 
 ### 1. Predicate\<T\>
-Takes an argument and returns a `boolean`.
-*   Abstract method: `boolean test(T t)`
-*   Use case: Filtering.
+Nhận một đối số và trả về một `boolean`.
+*   Phương thức trừu tượng: `boolean test(T t)`
+*   Trường hợp sử dụng: Lọc (Filtering).
 
 ```java
 Predicate<String> isLong = s -> s.length() > 10;
@@ -58,9 +57,9 @@ boolean result = isLong.test("Hello World"); // true
 ```
 
 ### 2. Consumer\<T\>
-Takes an argument and returns nothing (`void`).
-*   Abstract method: `void accept(T t)`
-*   Use case: Printing, saving to DB.
+Nhận một đối số và không trả về gì (`void`).
+*   Phương thức trừu tượng: `void accept(T t)`
+*   Trường hợp sử dụng: In ấn, lưu vào DB.
 
 ```java
 Consumer<String> printer = s -> System.out.println(s);
@@ -68,9 +67,9 @@ printer.accept("Java is fun");
 ```
 
 ### 3. Function\<T, R\>
-Takes an argument of type T and returns a result of type R.
-*   Abstract method: `R apply(T t)`
-*   Use case: Transformation / Mapping.
+Nhận một đối số kiểu T và trả về kết quả kiểu R.
+*   Phương thức trừu tượng: `R apply(T t)`
+*   Trường hợp sử dụng: Biến đổi / Ánh xạ.
 
 ```java
 Function<String, Integer> lengthMapper = String::length;
@@ -78,21 +77,20 @@ int len = lengthMapper.apply("Code"); // 4
 ```
 
 ### 4. Supplier\<T\>
-Takes no arguments and returns a result.
-*   Abstract method: `T get()`
-*   Use case: Lazy generation, factories.
+Không nhận đối số và trả về một kết quả.
+*   Phương thức trừu tượng: `T get()`
+*   Trường hợp sử dụng: Tạo lazy, factories.
 
 ```java
 Supplier<Double> randomizer = Math::random;
 ```
 
-## Method References
+## Method References (Tham chiếu phương thức)
 
-If your lambda just calls an existing method, you can use method references `::` for cleaner code.
-*   `s -> System.out.println(s)` becomes `System.out::println`
-*   `s -> s.toUpperCase()` becomes `String::toUpperCase`
+Nếu lambda của bạn chỉ gọi một phương thức hiện có, bạn có thể sử dụng tham chiếu phương thức `::` để code sạch hơn.
+*   `s -> System.out.println(s)` trở thành `System.out::println`
+*   `s -> s.toUpperCase()` trở thành `String::toUpperCase`
 
-## Conclusion
+## Kết luận
 
-Lambdas and Functional interfaces reduce boilerplate code and make your intentions clearer. They are the backbone of the Streams API and Async programming `CompletableFuture`. Embracing them is key to writing modern, clean Java code.
-
+Lambdas và Functional interfaces giảm mã soạn sẵn (boilerplate code) và làm cho ý định của bạn rõ ràng hơn. Chúng là xương sống của Streams API và lập trình bất đồng bộ `CompletableFuture`. Nắm vững chúng là chìa khóa để viết code Java hiện đại và sạch sẽ.

@@ -79,7 +79,7 @@ export function Certificates() {
                             {/* Hover Overlay */}
                             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
                                 <span className="bg-background/80 backdrop-blur text-foreground px-3 py-1 rounded-full text-xs font-semibold shadow-sm">
-                                    View Details
+                                    Xem chi tiết
                                 </span>
                             </div>
                         </div>
@@ -126,7 +126,7 @@ export function Certificates() {
                                     href={selectedCert.href}
                                     target="_blank"
                                     className="p-2 hover:bg-secondary rounded-full transition-colors"
-                                    title="Open in new tab"
+                                    title="Mở trong tab mới"
                                     onClick={(e) => e.stopPropagation()}
                                 >
                                     <ExternalLink className="w-5 h-5" />

@@ -1,40 +1,40 @@
 ---
-title: "`any` Considered as harmful, except for these cases"
-description: "Discover when it's appropriate to use Typescript's `any` type despite its risks. Learn about legitimate cases where `any` is necessary"
+title: "`any` Được coi là có hại, ngoại trừ những trường hợp này"
+description: "Khám phá khi nào là thích hợp để sử dụng kiểu `any` của Typescript bất chấp những rủi ro của nó. Tìm hiểu về các trường hợp hợp pháp mà `any` là cần thiết"
 image: "/images/blog/any-considered.webp"
 date: "2024-05-30"
 author: "devbertskie"
 ---
 
-`any` is an extremely powerful type in TypeScript. It lets you treat a value as if you were in JavaScript, not TypeScript. This means that it disables all of TypeScript's features - type checking, autocomplete, and safety.
+`any` là một kiểu cực kỳ mạnh mẽ trong TypeScript. Nó cho phép bạn xử lý một giá trị như thể bạn đang ở trong JavaScript, không phải TypeScript. Điều này có nghĩa là nó vô hiệu hóa tất cả các tính năng của TypeScript - kiểm tra kiểu, tự động hoàn thành và an toàn.
 
 ```ts
 const myFunction = (input: any) => {
   input.someMethod();
 };
 
-myFunction("abc"); // This will fail at runtime!
+myFunction("abc"); // Điều này sẽ thất bại khi chạy!
 ```
 
-Using `any` is rightly considered harmful by most of the community. There are [ESLint rules](https://typescript-eslint.io/rules/no-explicit-any/) to prevent its use. This can turn developers off using `any` entirely.
+Sử dụng `any` được coi là có hại bởi hầu hết cộng đồng. Có các [quy tắc ESLint](https://typescript-eslint.io/rules/no-explicit-any/) để ngăn chặn việc sử dụng nó. Điều này có thể khiến các nhà phát triển hoàn toàn không sử dụng `any`.
 
-However, there are a few advanced cases where `any` is always the right choice. Here are some of them:
+Tuy nhiên, có một vài trường hợp nâng cao mà `any` luôn là lựa chọn đúng đắn. Dưới đây là một số trong số chúng:
 
-## Type Argument Constraints
+## Các ràng buộc đối số kiểu (Type Argument Constraints)
 
-Let's imagine we wanted to implement the `ReturnType` utility in TypeScript. This utility takes a function type and returns the type of its return value.
+Hãy tưởng tượng chúng ta muốn triển khai tiện ích `ReturnType` trong TypeScript. Tiện ích này nhận vào một kiểu hàm và trả về kiểu của giá trị trả về của nó.
 
-We need to create a [generic type](https://www.totaltypescript.com/no-such-thing-as-a-generic#generic-types) which takes a function type as a type argument. If we restricted ourselves to not use `any`, we might use `unknown`:
+Chúng ta cần tạo một [generic type](https://www.totaltypescript.com/no-such-thing-as-a-generic#generic-types) nhận một kiểu hàm làm đối số kiểu. Nếu chúng ta tự hạn chế không sử dụng `any`, chúng ta có thể sử dụng `unknown`:
 
 ```ts
 type ReturnType<T extends (...args: unknown[]) => unknown> =
-  // Not important for our explanation:
+  // Không quan trọng cho lời giải thích của chúng ta:
   T extends (...args: unknown[]) => infer R ? R : never;
 ```
 
-It's not important to understand -all- of this code, only the constraint - `T extends (...args: unknown[]) => unknown`. What we're saying here is that only functions which accept an arguments array of `unknown[]` and return `unknown` are allowed.
+Không quan trọng phải hiểu -tất cả- mã này, chỉ cần hiểu ràng buộc - `T extends (...args: unknown[]) => unknown`. Những gì chúng ta đang nói ở đây là chỉ các hàm chấp nhận một mảng đối số `unknown[]` và trả về `unknown` mới được phép.
 
-It seems to work fine for functions which have no arguments:
+Nó dường như hoạt động tốt cho các hàm không có đối số:
 
 ```ts
 const myFunction = () => {
@@ -44,7 +44,7 @@ const myFunction = () => {
 type Result = ReturnType<typeof myFunction>;
 ```
 
-But it stops working as soon as we add an argument:
+Nhưng nó ngừng hoạt động ngay khi chúng ta thêm một đối số:
 
 ```ts
 const myFunction = (input: string) => {
@@ -54,7 +54,7 @@ const myFunction = (input: string) => {
 type Result = ReturnType<typeof myFunction>;
 ```
 
-In fact, it only works if we change the parameter of our function to `input: unknown`:
+Thực tế, nó chỉ hoạt động nếu chúng ta thay đổi tham số của hàm thành `input: unknown`:
 
 ```ts
 const myFunction = (input: unknown) => {
@@ -64,9 +64,9 @@ const myFunction = (input: unknown) => {
 type Result = ReturnType<typeof myFunction>;
 ```
 
-So accidentally, we've created a `ReturnType` function that only works on functions which accept `unknown` as an argument. This is not what we wanted. We wanted it to work on any function.
+Vì vậy, vô tình, chúng ta đã tạo ra một `ReturnType` chỉ hoạt động trên các hàm chấp nhận `unknown` làm đối số. Đây không phải là điều chúng ta muốn. Chúng ta muốn nó hoạt động trên bất kỳ hàm nào.
 
-The solution is to use `any[]` as the type argument constraint:
+Giải pháp là sử dụng `any[]` làm ràng buộc đối số kiểu:
 
 ```ts
 type ReturnType<T extends (...args: any[]) => any> = T extends (
@@ -82,13 +82,13 @@ const myFunction = (input: string) => {
 type Result = ReturnType<typeof myFunction>;
 ```
 
-Now it works as expected. We're declaring that we don't care what types the function accepts - it could be anything.
+Bây giờ nó hoạt động như mong đợi. Chúng ta đang tuyên bố rằng chúng ta không quan tâm hàm chấp nhận kiểu gì - nó có thể là bất cứ thứ gì.
 
-The reason this is safe is because we're deliberately declaring a wide type. We're saying "I don't care what the function accepts, as long as it's a function". This is a safe use of `any`.
+Lý do điều này an toàn là vì chúng ta đang cố tình khai báo một kiểu rộng. Chúng ta đang nói "Tôi không quan tâm hàm chấp nhận gì, miễn là nó là một hàm". Đây là một cách sử dụng an toàn của `any`.
 
-## Returning Conditional Types From Generic Functions
+## Trả về Kiểu có điều kiện từ Hàm Generic
 
-In some places, TypeScript's narrowing abilites are not as good as we'd like them to be. Let's say we want to create a function which returns different types based on a condition:
+Ở một số nơi, khả năng thu hẹp (narrowing) của TypeScript không tốt như chúng ta mong muốn. Giả sử chúng ta muốn tạo một hàm trả về các kiểu khác nhau dựa trên một điều kiện:
 
 ```ts
 const youSayGoodbyeISayHello = (input: "hello" | "goodbye") => {
@@ -102,9 +102,9 @@ const youSayGoodbyeISayHello = (input: "hello" | "goodbye") => {
 const result = youSayGoodbyeISayHello("hello");
 ```
 
-This function isn't really doing what we want it to. We want it to return the type `"goodbye"` when we pass in `"hello"`. But currently, `result` is typed as `"hello" | "goodbye"`.
+Hàm này không thực sự làm những gì chúng ta muốn. Chúng ta muốn nó trả về kiểu `"goodbye"` khi chúng ta truyền vào `"hello"`. Nhưng hiện tại, `result` được định kiểu là `"hello" | "goodbye"`.
 
-We can fix this by using a conditional type:
+Chúng ta có thể khắc phục điều này bằng cách sử dụng một kiểu có điều kiện (conditional type):
 
 ```ts
 const youSayGoodbyeISayHello = <TInput extends "hello" | "goodbye">(
@@ -124,9 +124,9 @@ const hello = youSayGoodbyeISayHello("goodbye");
 const hello: "hello";
 ```
 
-We've added a conditional type to the return type of the function which mirrors our runtime logic. If `TInput`, inferred from the runtime argument input, is `"hello"`, we return `"goodbye"`. Otherwise, we return `"hello"`.
+Chúng ta đã thêm một kiểu có điều kiện vào kiểu trả về của hàm phản ánh logic runtime của chúng ta. Nếu `TInput`, được suy ra từ tham số runtime, là `"hello"`, chúng ta trả về `"goodbye"`. Ngược lại, chúng ta trả về `"hello"`.
 
-But there's a problem. I've deliberately disabled the errors in the snippet above. Let's see what happens when we enable them:
+Nhưng có một vấn đề. Tôi đã cố tình tắt các lỗi trong đoạn mã trên. Hãy xem điều gì xảy ra khi chúng ta bật chúng lên:
 
 ```ts
 const youSayGoodbyeISayHello = <TInput extends "hello" | "goodbye">(
@@ -140,9 +140,9 @@ const youSayGoodbyeISayHello = <TInput extends "hello" | "goodbye">(
 };
 ```
 
-Ouch. TypeScript doesn't seem to be matching up the conditional type with the runtime logic. `"hello"` or `"goodbye"` can't be returned from the function.
+Ôi! TypeScript dường như không khớp kiểu có điều kiện với logic runtime. `"hello"` hoặc `"goodbye"` không thể được trả về từ hàm.
 
-We can fix this by using `as`, and forcing it to be the correct conditional type:
+Chúng ta có thể sửa lỗi này bằng cách sử dụng `as`, và buộc nó phải là kiểu có điều kiện chính xác:
 
 ```ts
 const youSayGoodbyeISayHello = <TInput extends "hello" | "goodbye">(
@@ -156,7 +156,7 @@ const youSayGoodbyeISayHello = <TInput extends "hello" | "goodbye">(
 };
 ```
 
-We can make this nicer by extracting that logic to a common generic type:
+Chúng ta có thể làm cho điều này đẹp hơn bằng cách trích xuất logic đó thành một generic type chung:
 
 ```ts
 type YouSayGoodbyeISayHello<TInput extends "hello" | "goodbye"> =
@@ -173,7 +173,7 @@ const youSayGoodbyeISayHello = <TInput extends "hello" | "goodbye">(
 };
 ```
 
-But in these situations, it often makes more sense to use as `any`:
+Nhưng trong những tình huống này, thường hợp lý hơn khi sử dụng `as any`:
 
 ```ts
 const youSayGoodbyeISayHello = <TInput extends "hello" | "goodbye">(
@@ -187,14 +187,14 @@ const youSayGoodbyeISayHello = <TInput extends "hello" | "goodbye">(
 };
 ```
 
-Yes, this does make our function less type-safe. We could accidentally return `"bonsoir"` from the function instead.
+Đúng, điều này làm cho hàm của chúng ta kém an toàn về loại hơn. Chúng ta có thể vô tình trả về `"bonsoir"` từ hàm thay thế.
 
-But in these situations, it's often better to use `as any` and add a unit test for this function's behavior. Because of TypeScript's limitations in checking this stuff, this is often as close as you'll get to type safety.
+Nhưng trong các tình huống này, thường tốt hơn là sử dụng `as any` và thêm một unit test cho hành vi của hàm này. Do những hạn chế của TypeScript trong việc kiểm tra những thứ này, đây thường là mức độ an toàn về kiểu gần nhất mà bạn có thể đạt được.
 
-There are several other use cases like this, where inside generic functions you need to use `any` to get around TypeScript's limitations. To me, this is fine.
+Có một vài trường hợp sử dụng khác như thế này, nơi bên trong các hàm generic bạn cần sử dụng `any` để giải quyết các hạn chế của TypeScript. Đối với tôi, điều này là ổn.
 
-## Conclusion
+## Kết luận
 
-A question remains: should you ban `any` from your codebase? I think, on balance, the answer should be yes. You should turn on the `ESLint rule` which prevents its use, and you should avoid it wherever possible.
+Một câu hỏi vẫn còn đó: bạn có nên cấm `any` khỏi codebase của mình không? Tôi nghĩ, nhìn chung, câu trả lời nên là có. Bạn nên bật `quy tắc ESLint` ngăn chặn việc sử dụng nó, và bạn nên tránh nó bất cứ khi nào có thể.
 
-However, there are cases where `any` is needed. They're worth using eslint-disable to get around them. So, bookmark this article, and attach it to your PR's when you feel the need to use it.
+Tuy nhiên, có những trường hợp `any` là cần thiết. Chúng đáng để sử dụng eslint-disable để giải quyết vấn đề. Vì vậy, hãy đánh dấu bài viết này và đính kèm nó vào các PR của bạn khi bạn cảm thấy cần phải sử dụng nó.

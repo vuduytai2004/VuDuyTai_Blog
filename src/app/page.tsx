@@ -52,7 +52,7 @@ export default function Home() {
                                         "rounded-full px-8 text-base transition-all hover:scale-105 backdrop-blur-sm bg-background/50"
                                     )}
                                 >
-                                    About Me
+                                    Giới thiệu
                                 </Link>
                             </div>
                         </div>
@@ -120,7 +120,7 @@ export default function Home() {
                                         )}
                                     </div>
                                     <div className="mt-6 flex items-center text-sm font-medium text-primary opacity-0 -translate-x-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0">
-                                        Read more <ArrowRight className="ml-1 h-4 w-4" />
+                                        Đọc tiếp <ArrowRight className="ml-1 h-4 w-4" />
                                     </div>
                                 </div>
                                 <Link href={blog.slug} className="absolute inset-0">
@@ -138,7 +138,7 @@ export default function Home() {
                                 "rounded-full px-8 border-primary/20 hover:border-primary hover:bg-primary/5"
                             )}
                         >
-                            View All Posts
+                            Xem tất cả bài viết
                         </Link>
                     </div>
                 </div>

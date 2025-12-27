@@ -1,72 +1,70 @@
 ---
-title: "Deep Dive into Java Garbage Collection"
-description: "Understand the internal mechanics of Java's Garbage Collection, different GC algorithms (G1, ZGC, Shenandoah), and how to tune the JVM for performance."
+title: "Đi sâu vào Java Garbage Collection"
+description: "Hiểu cơ chế bên trong của Java Garbage Collection, các thuật toán GC khác nhau (G1, ZGC, Shenandoah), và cách tinh chỉnh JVM để đạt hiệu suất cao."
 image: "/images/blog/java-garbage-collection.png"
 date: "2025-12-24"
 author: "Tai Vu"
 ---
 
+# Đi sâu vào Java Garbage Collection
 
-# Deep Dive into Java Garbage Collection
+Automatic Garbage Collection (GC) được cho là một trong những tính năng quan trọng nhất của Java, giải phóng các nhà phát triển khỏi gánh nặng quản lý bộ nhớ thủ công. Tuy nhiên, đối với các ứng dụng hiệu suất cao, việc coi GC như một "hộp đen" thường là không đủ. Bài viết này khám phá cách Java quản lý bộ nhớ và cách các trình thu gom rác hiện đại hoạt động.
 
-Automatic Garbage Collection (GC) is arguably one of Java's most significant features, relieving developers from the burden of manual memory management. However, for high-performance applications, treating the GC as a "black box" is often insufficient. This article explores how Java manages memory and how modern garbage collectors work.
+## Cấu trúc Bộ nhớ Java
 
-## The Java Memory Structure
+Để hiểu GC, trước tiên chúng ta phải hiểu bố cục bộ nhớ của JVM:
 
-To understand GC, we must first understand the memory layout of the JVM:
+1.  **The Stack**: Lưu trữ các biến cục bộ và các khung gọi phương thức (method call frames). Các tham chiếu đến đối tượng sống ở đây, nhưng bản thân các đối tượng sống trong Heap.
+2.  **The Heap**: Vùng dữ liệu runtime nơi bộ nhớ cho tất cả các instance của class và mảng được phân bổ. Đây là sân chơi cho Garbage Collector.
+3.  **Metaspace**: Lưu trữ metadata của class (trước đây là PermGen).
 
-1.  **The Stack**: Stores local variables and method call frames. References to objects live here, but the objects themselves live in the Heap.
-2.  **The Heap**: The runtime data area from which memory for all class instances and arrays is allocated. This is the playground for the Garbage Collector.
-3.  **Metaspace**: Stores class metadata (formerly PermGen).
+## Giả thuyết Thế hệ (The Generational Hypothesis)
 
-## The Generational Hypothesis
+Hầu hết các Garbage Collectors trong Java tuân theo **Giả thuyết Thế hệ Yếu**, trong đó nêu rõ:
+*   Hầu hết các đối tượng chết trẻ.
+*   Rất ít tham chiếu tồn tại từ các đối tượng cũ đến các đối tượng trẻ hơn.
 
-Most Garbage Collectors in Java follow the **Weak Generational Hypothesis**, which states:
-*   Most objects die young.
-*   Few references exist from older to younger objects.
+Dựa trên điều này, Heap được chia thành:
+*   **Young Generation (Eden + Survivor Spaces)**: Nơi các đối tượng mới được sinh ra. Minor GCs (thu gom nhỏ) xảy ra ở đây thường xuyên và rất nhanh.
+*   **Old Generation (Tenured)**: Nơi các đối tượng sống lâu được thăng cấp. Major GCs (thu gom lớn) xảy ra ở đây và thường chậm hơn (thường gây ra các khoảng dừng "Stop-The-World").
 
-Based on this, the Heap is divided into:
-*   **Young Generation (Eden + Survivor Spaces)**: Where new objects are born. Minor GCs happen here frequently and are very fast.
-*   **Old Generation (Tenured)**: Where long-lived objects are promoted. Major GCs happen here and are generally slower (often causing "Stop-The-World" pauses).
+## Cách GC hoạt động: Mark and Sweep
 
-## How GC Works: Mark and Sweep
+Thuật toán cổ điển bao gồm hai giai đoạn:
+1.  **Mark (Đánh dấu)**: GC duyệt qua tất cả các tham chiếu đối tượng bắt đầu từ "GC Roots" (biến stack, biến tĩnh, v.v.) và đánh dấu mọi đối tượng có thể truy cập là "sống".
+2.  **Sweep (Quét)**: GC thu hồi bộ nhớ bị chiếm bởi tất cả các đối tượng *không* được đánh dấu.
 
-The classic algorithm involves two phases:
-1.  **Mark**: The GC traverses all object references starting from "GC Roots" (stack variables, static variables, etc.) and marks every reachable object as "live".
-2.  **Sweep**: The GC reclaims the memory occupied by all objects that were *not* marked.
+## Các Garbage Collectors Hiện đại
 
-## Modern Garbage Collectors
-
-Java has evolved with several GC implementations to suit different needs:
+Java đã phát triển với một số triển khai GC để phù hợp với các nhu cầu khác nhau:
 
 ### 1. Serial GC
-Single-threaded. Good for small applications or single-processor machines. Stop-the-world (STW) pauses can be long.
+Đơn luồng. Tốt cho các ứng dụng nhỏ hoặc máy đơn vi xử lý. Các khoảng dừng Stop-the-world (STW) có thể dài.
 
 ### 2. Parallel GC (Throughput Collector)
-Uses multiple threads for minor and major collections. Focuses on maximizing *throughput* (total work done) rather than minimizing pause times. This was the default for a long time.
+Sử dụng nhiều luồng cho các bộ sưu tập nhỏ và lớn. Tập trung vào việc tối đa hóa *throughput* (tổng công việc được thực hiện) thay vì giảm thiểu thời gian tạm dừng. Đây là mặc định trong một thời gian dài.
 
 ### 3. G1 GC (Garbage First)
-The default since Java 9. It partitions the heap into equal-sized regions. It prioritizes collecting regions with the most garbage (hence "Garbage First"). It aims for predictable pause times while maintaining high throughput.
+Mặc định kể từ Java 9. Nó phân chia heap thành các vùng có kích thước bằng nhau. Nó ưu tiên thu gom các vùng có nhiều rác nhất (do đó có tên "Garbage First"). Nó nhắm đến thời gian tạm dừng dự đoán được trong khi duy trì thông lượng cao.
 
-### 4. ZGC and Shenandoah (Low Latency GCs)
-Introduced in newer Java versions (ZGC is production-ready in JDK 15+). These collectors perform expensive work *concurrently* with the application threads. They aim for sub-millisecond pause times, regardless of heap size (even multi-terabyte heaps!).
+### 4. ZGC và Shenandoah (Low Latency GCs)
+Được giới thiệu trong các phiên bản Java mới hơn (ZGC sẵn sàng sản xuất trong JDK 15+). Các bộ thu gom này thực hiện công việc đắt đỏ *đồng thời* với các luồng ứng dụng. Chúng nhắm đến thời gian tạm dừng dưới một phần nghìn giây, bất kể kích thước heap (ngay cả các heap đa terabyte!).
 
-## Tuning the JVM
+## Tinh chỉnh JVM
 
-While modern defaults are great, sometimes you need to tune. Common flags include:
+Mặc dù các mặc định hiện đại là tuyệt vời, đôi khi bạn cần tinh chỉnh. Các cờ phổ biến bao gồm:
 
-*   `-Xms` and `-Xmx`: Set initial and maximum heap size. Setting them equal removes the overhead of resizing the heap.
-*   `-XX:+UseG1GC`: Explicitly enable G1 GC.
-*   `-XX:MaxGCPauseMillis`: A target for maximum pause time (soft goal for G1).
+*   `-Xms` và `-Xmx`: Đặt kích thước heap ban đầu và tối đa. Đặt chúng bằng nhau sẽ loại bỏ chi phí thay đổi kích thước heap.
+*   `-XX:+UseG1GC`: Bật G1 GC một cách rõ ràng.
+*   `-XX:MaxGCPauseMillis`: Mục tiêu cho thời gian tạm dừng tối đa (mục tiêu mềm cho G1).
 
-## Diagnosing GC Issues
+## Chẩn đoán các vấn đề GC
 
-If your application suffers from long pauses or `OutOfMemoryError`, you need data.
-*   **GC Logs**: Enable with `-Xlog:gc*`. Analyze them using tools like GCViewer or GCeasy.io.
-*   **VisualVM / JConsole**: Monitor heap usage in real-time.
-*   **Heap Dumps**: Take a snapshot of memory to find memory leaks.
+Nếu ứng dụng của bạn bị tạm dừng lâu hoặc `OutOfMemoryError`, bạn cần dữ liệu.
+*   **GC Logs**: Bật với `-Xlog:gc*`. Phân tích chúng bằng các công cụ như GCViewer hoặc GCeasy.io.
+*   **VisualVM / JConsole**: Giám sát sử dụng heap trong thời gian thực.
+*   **Heap Dumps**: Chụp nhanh bộ nhớ để tìm rò rỉ bộ nhớ.
 
-## Conclusion
+## Kết luận
 
-Garbage Collection is a complex beast, but understanding its fundamentals is crucial for writing scalable Java applications. By choosing the right collector and tuning the JVM appropriately, you can ensure your application runs smoothly under load.
-
+Garbage Collection là một con quái vật phức tạp, nhưng hiểu các nguyên tắc cơ bản của nó là rất quan trọng để viết các ứng dụng Java có thể mở rộng. Bằng cách chọn bộ thu gom phù hợp và tinh chỉnh JVM một cách thích hợp, bạn có thể đảm bảo ứng dụng của mình chạy trơn tru dưới tải.
