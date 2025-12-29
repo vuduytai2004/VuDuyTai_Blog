@@ -86,7 +86,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
         },
         home: {
             description: "Một không gian riêng của Vũ Duy Tài",
-            hero_title: "Chào, mình là Vũ Duy Tài 👋",
+            hero_title: "Hành trình vạn dặm bắt đầu từ một bước chân",
             my_blog: "🎉 Blog Của Tôi",
             latest_posts: "Bài Viết Mới Nhất",
             see_all_posts: "Xem tất cả bài viết",
