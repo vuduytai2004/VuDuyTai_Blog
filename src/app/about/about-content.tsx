@@ -188,6 +188,53 @@ export default function AboutContent() {
                     </div>
                 </div>
             </div>
+            {/* PROJECTS */}
+            <div className="space-y-6 mt-12">
+                <h2 className="flex items-center text-2xl font-bold uppercase text-foreground">
+                    <span className="mr-2 inline-block size-4 bg-foreground" />
+                    {t.projects.title}
+                </h2>
+                <div className="grid gap-6 md:grid-cols-2">
+                    <div className="group relative flex flex-col justify-between overflow-hidden rounded-xl border bg-card p-6 shadow-sm transition-all hover:shadow-md dark:border-primary/20">
+                        <div className="absolute inset-0 opacity-0 transition-opacity group-hover:opacity-5 bg-gradient-to-br from-purple-500 to-indigo-500" />
+                        <div className="space-y-4">
+                            <h3 className="text-xl font-bold leading-tight group-hover:text-primary transition-colors">
+                                {t.projects.project1_title}
+                            </h3>
+                            <p className="text-muted-foreground">
+                                {t.projects.project1_desc}
+                            </p>
+                        </div>
+                        <div className="mt-6 flex flex-wrap gap-2">
+                            {["Prometheus", "AI", "Anomaly Detection"].map(tag => (
+                                <span key={tag} className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors border-transparent bg-secondary text-secondary-foreground">
+                                    {tag}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="group relative flex flex-col justify-between overflow-hidden rounded-xl border bg-card p-6 shadow-sm transition-all hover:shadow-md dark:border-primary/20">
+                        <div className="absolute inset-0 opacity-0 transition-opacity group-hover:opacity-5 bg-gradient-to-br from-blue-500 to-cyan-500" />
+                        <div className="space-y-4">
+                            <h3 className="text-xl font-bold leading-tight group-hover:text-primary transition-colors">
+                                {t.projects.project2_title}
+                            </h3>
+                            <p className="text-muted-foreground">
+                                {t.projects.project2_desc}
+                            </p>
+                        </div>
+                        <div className="mt-6 flex flex-wrap gap-2">
+                            {["Zabbix", "Performance Monitoring"].map(tag => (
+                                <span key={tag} className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors border-transparent bg-secondary text-secondary-foreground">
+                                    {tag}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <hr className="my-8" />
             <div className="flex flex-col space-y-6">
                 <h2 className="flex items-center text-2xl font-bold uppercase text-foreground">

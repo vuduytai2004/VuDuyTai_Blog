@@ -37,6 +37,13 @@ export type Dictionary = {
         title: string;
         description: string;
     };
+    projects: {
+        title: string;
+        project1_title: string;
+        project1_desc: string;
+        project2_title: string;
+        project2_desc: string;
+    };
 };
 
 export const dictionaries: Record<Locale, Dictionary> = {
@@ -76,6 +83,13 @@ export const dictionaries: Record<Locale, Dictionary> = {
             title: "Contact",
             description: "Let's connect and collaborate.",
         },
+        projects: {
+            title: "Projects",
+            project1_title: "Network Monitoring System with Prometheus & AI",
+            project1_desc: "Building a network monitoring system using Prometheus integrated with AI for anomaly detection.",
+            project2_title: "Performance Monitoring with Zabbix",
+            project2_desc: "Researching and implementing performance monitoring with system Zabbix.",
+        },
     },
     vn: {
         nav: {
@@ -112,6 +126,13 @@ export const dictionaries: Record<Locale, Dictionary> = {
         contact: {
             title: "Liên Hệ",
             description: "Hãy kết nối và hợp tác.",
+        },
+        projects: {
+            title: "Dự Án",
+            project1_title: "Hệ thống giám sát mạng với Prometheus & AI",
+            project1_desc: "Xây dựng hệ thống mạng giám sát mạng với Prometheus tích hợp AI phát hiện bất thường",
+            project2_title: "Giám sát hiệu năng với Zabbix",
+            project2_desc: "Tìm hiểu và giám sát hiệu năng với Zabbix",
         },
     },
 };
