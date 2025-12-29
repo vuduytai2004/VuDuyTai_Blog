@@ -204,6 +204,9 @@ export default function AboutContent() {
                             <p className="text-muted-foreground">
                                 {t.projects.project1_desc}
                             </p>
+                            <p className="text-sm font-medium text-primary">
+                                {t.projects.project1_role}
+                            </p>
                         </div>
                         <div className="mt-6 flex flex-wrap gap-2">
                             {["Prometheus", "AI", "Anomaly Detection"].map(tag => (
@@ -222,6 +225,9 @@ export default function AboutContent() {
                             </h3>
                             <p className="text-muted-foreground">
                                 {t.projects.project2_desc}
+                            </p>
+                            <p className="text-sm font-medium text-primary">
+                                {t.projects.project2_role}
                             </p>
                         </div>
                         <div className="mt-6 flex flex-wrap gap-2">
